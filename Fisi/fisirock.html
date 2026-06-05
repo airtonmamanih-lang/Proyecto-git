@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Currículum - Tu Nombre</title>
+  <style>
+    :root { --bg:#f6f7fb; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --line:#e5e7eb; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.06);
+    }
+    header { border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 18px; }
+    h1 { margin: 0 0 6px; font-size: 32px; letter-spacing: .2px; }
+    .subtitle { margin: 0; color: var(--muted); }
+    h2 { margin: 18px 0 8px; font-size: 18px; }
+    p { margin: 6px 0; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 760px) { .grid { grid-template-columns: 1.2fr .8fr; } }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      margin: 6px 6px 0 0;
+      font-size: 14px;
+      background: #fafafa;
+    }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <header>
+        <h1>Tu Nombre Apellido</h1>
+        <p class="subtitle">
+          <strong>Estudiante / Desarrollador(a) Web</strong> · <em>Lima, Perú</em>
+        </p>
+        <p class="muted">
+          <strong>Email:</strong> tunombre@email.com · <strong>Tel:</strong> +51 999 999 999 ·
+          <strong>LinkedIn:</strong> linkedin.com/in/tunombre
+        </p>
+      </header>
+
+      <div class="grid">
+        <section>
+          <h2>Perfil</h2>
+          <p>
+            Soy una persona responsable y proactiva, con interés en <strong>tecnología</strong> y
+            <em>aprendizaje continuo</em>. Busco oportunidades para aplicar mis conocimientos en proyectos reales.
+          </p>
+
+          <h2>Experiencia</h2>
+          <p>
+            <strong>Practicante / Proyecto personal</strong> — <em>2025</em><br />
+            Desarrollo de una página web sencilla usando <strong>HTML</strong> y <strong>CSS</strong>.
+            Enfoque en estructura semántica y presentación limpia.
+          </p>
+
+          <h2>Educación</h2>
+          <p>
+            <strong>Nombre de tu institución</strong> — <em>2023 - Actualidad</em><br />
+            Carrera/Programa: <strong>Computación / Sistemas</strong> (ajusta según corresponda).
+          </p>
+        </section>
+
+        <aside>
+          <h2>Habilidades</h2>
+          <p class="pill"><strong>HTML</strong></p>
+          <p class="pill"><strong>CSS</strong></p>
+          <p class="pill"><strong>Trabajo en equipo</strong></p>
+          <p class="pill"><strong>Comunicación</strong></p>
+          <p class="pill"><em>Aprendizaje rápido</em></p>
+
+          <h2>Datos clave</h2>
+          <p><strong>Disponibilidad:</strong> <em>Tiempo parcial / Completo</em></p>
+          <p><strong>Idiomas:</strong> Español (nativo), Inglés (básico/intermedio)</p>
+
+          <h2>Contacto</h2>
+          <p>
+            Puedes escribirme a <strong>tunombre@email.com</strong> o llamarme al
+            <strong>+51 999 999 999</strong>.
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
