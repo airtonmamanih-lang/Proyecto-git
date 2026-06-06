@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOLAZO FC — Videojuego de Fútbol</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0b1a0b;
+    font-family: 'Barlow', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  #wrapper {
+    width: 900px;
+    max-width: 99vw;
+    position: relative;
+  }
+
+  #scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px 6px;
+  }
+
+  .team-info { display: flex; flex-direction: column; gap: 2px; }
+
+  .team-name {
+    font-family: 'Anton', cursive;
+    font-size: 20px;
+    letter-spacing: 3px;
+  }
+
+  .team-score {
+    font-family: 'Anton', cursive;
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  #team1-info .team-name  { color: #4fc3f7; }
+  #team1-info .team-score { color: #4fc3f7; text-shadow: 0 0 16px #4fc3f788; }
+  #team2-info             { text-align: right; }
+  #team2-info .team-name  { color: #ef5350; }
+  #team2-info .team-score { color: #ef5350; text-shadow: 0 0 16px #ef535088; }
+
+  #center-info { text-align: center; }
+
+  #game-title {
+    font-family: 'Anton', cursive;
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: #c8e6c9;
+    text-shadow: 0 0 12px #c8e6c944;
+  }
+
+  #timer-display {
+    font-family: 'Anton', cursive;
+    font-size: 32px;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+
+  #period-label {
+    font-size: 12px;
+    color: #666;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  #game-canvas {
+    display: block;
+    border-radius: 4px;
+    border: 2px solid #1b3a1b;
+  }
+
+  #controls-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 4px 0;
+    font-size: 12px;
+    color: #3a5c3a;
+  }
+
+  kbd {
+    background: #0f2a0f;
+    border: 1px solid #2a4a2a;
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: #5a8a5a;
+    font-size: 11px;
+    font-family: 'Barlow', monospace;
+  }
+
+  #overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    z-index: 10;
+  }
+
+  #overlay-title {
+    font-family: 'Anton', cursive;
+    font-size: 70px;
+    letter-spacing: 8px;
+    color: #76c442;
+    text-shadow: 0 0 40px #76c44266;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  #overlay-sub {
+    font-size: 16px;
+    color: #5a8a5a;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+
+  .ov-btn {
+    font-family: 'Anton', cursive;
+    font-size: 20px;
+    letter-spacing: 5px;
+    color: #0b1a0b;
+    background: #76c442;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 44px;
+    cursor: pointer;
+    box-shadow: 0 0 30px #76c44255;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .ov-btn:hover { transform: scale(1.06); box-shadow: 0 0 44px #76c44299; }
+
+  #goal-flash {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 8;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  #goal-flash.show {
+    opacity: 1;
+    animation: goalPulse 1.4s forwards;
+  }
+
+  @keyframes goalPulse {
+    0%   { opacity: 1; }
+    60%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  #goal-text {
+    font-family: 'Anton', cursive;
+    font-size: 90px;
+    letter-spacing: 12px;
+    color: #fff;
+    text-shadow: 0 0 60px #76c442, 0 0 120px #76c442aa;
+    animation: goalBounce 0.3s ease infinite alternate;
+  }
+
+  @keyframes goalBounce {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  #goal-scorer {
+    font-family: 'Anton', cursive;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: #c8e6c9;
+    margin-top: 4px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+  <div id="scoreboard">
+    <div class="team-info" id="team1-info">
+      <span class="team-name">AZUL FC</span>
+      <span class="team-score" id="score1">0</span>
+    </div>
+    <div id="center-info">
+      <div id="game-title">GOLAZO FC</div>
+      <div id="timer-display">02:00</div>
+      <div id="period-label">TIEMPO REGULAR</div>
+    </div>
+    <div class="team-info" id="team2-info">
+      <span class="team-name">ROJO FC</span>
+      <span class="team-score" id="score2">0</span>
+    </div>
+  </div>
+
+  <canvas id="game-canvas" width="900" height="500"></canvas>
+
+  <div id="controls-row">
+    <span>AZUL: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> mover &nbsp; <kbd>F</kbd> tiro</span>
+    <span>ROJO: <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> mover &nbsp; <kbd>1</kbd> tiro</span>
+  </div>
+
+  <div id="goal-flash">
+    <div>
+      <div id="goal-text">⚽ GOL !</div>
+      <div id="goal-scorer"></div>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <div id="overlay-title">GOLAZO<br>FC</div>
+    <div id="overlay-sub">FÚTBOL ARCADE 2 JUGADORES</div>
+    <button class="ov-btn" onclick="startGame()">▶ INICIAR PARTIDO</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+const FIELD_PAD = 40;
+const GOAL_W = 12, GOAL_H = 100;
+const GOAL_Y = H / 2 - GOAL_H / 2;
+const PLAYER_R = 16;
+const BALL_R = 10;
+const GAME_DURATION = 120;
+
+let score = [0, 0];
+let gameTime = GAME_DURATION;
+let gameRunning = false;
+let timerInterval;
+let animId;
+let confetti = [];
+let kickParticles = [];
+
+const keys = {};
+document.addEventListener('keydown', e => { keys[e.code] = true; e.preventDefault(); });
+document.addEventListener('keyup',   e => { keys[e.code] = false; });
+
+let ball;
+function resetBall() {
+  ball = {
+    x: W / 2, y: H / 2,
+    vx: (Math.random() > 0.5 ? 1 : -1) * 3,
+    vy: (Math.random() - 0.5) * 4,
+    r: BALL_R, owner: null,
+    kickCooldown: 0, spin: 0
+  };
+}
+
+class Player {
+  constructor(x, y, color, glow, name, team) {
+    this.x = x; this.y = y;
+    this.vx = 0; this.vy = 0;
+    this.color = color; this.glow = glow;
+    this.name = name; this.team = team;
+    this.r = PLAYER_R;
+    this.kickCooldown = 0;
+    this.hasBall = false;
+    this.facing = team === 0 ? 1 : -1;
+    this.runFrame = 0;
+  }
+
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x - this.r < FIELD_PAD)     this.x = FIELD_PAD + this.r;
+    if (this.x + this.r > W - FIELD_PAD) this.x = W - FIELD_PAD - this.r;
+    if (this.y - this.r < FIELD_PAD)     this.y = FIELD_PAD + this.r;
+    if (this.y + this.r > H - FIELD_PAD) this.y = H - FIELD_PAD - this.r;
+    if (this.kickCooldown > 0) this.kickCooldown--;
+    if (Math.abs(this.vx) > 0.1 || Math.abs(this.vy) > 0.1) {
+      this.runFrame += 0.25;
+      if (this.vx !== 0) this.facing = this.vx > 0 ? 1 : -1;
+    }
+    this.vx *= 0.82; this.vy *= 0.82;
+  }
+
+  draw() {
+    const bobY = Math.sin(this.runFrame * Math.PI * 2) * 1.5;
+    ctx.save();
+    ctx.shadowColor = this.glow; ctx.shadowBlur = 14;
+
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y + this.r + 2, this.r, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y + bobY, this.r, this.r + 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 11px Barlow, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(this.team === 0 ? '10' : '9', this.x, this.y + bobY);
+
+    ctx.fillStyle = '#f5d5a8'; ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(this.x + this.facing * 4, this.y - this.r + bobY, 9, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.team === 0 ? '#1a237e' : '#b71c1c';
+    ctx.beginPath();
+    ctx.arc(this.x + this.facing * 4, this.y - this.r - 1 + bobY, 9, Math.PI, 0);
+    ctx.fill();
+
+    const leg = Math.sin(this.runFrame * Math.PI * 2) * 6;
+    ctx.strokeStyle = this.color; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(this.x - 4, this.y + this.r - 4 + bobY);
+    ctx.lineTo(this.x - 6, this.y + this.r + 10 + bobY + leg); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(this.x + 4, this.y + this.r - 4 + bobY);
+    ctx.lineTo(this.x + 6, this.y + this.r + 10 + bobY - leg); ctx.stroke();
+    ctx.restore();
+
+    if (this.hasBall) {
+      ctx.save();
+      ctx.strokeStyle = '#fff700'; ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#fff700'; ctx.shadowBlur = 10;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.arc(this.x, this.y + bobY, this.r + 8, 0, Math.PI * 2);
+      ctx.stroke(); ctx.restore();
+    }
+  }
+}
+
+function handleP1Input(p) {
+  const speed = 4.5;
+  if (keys['KeyA']) p.vx -= speed * 0.22;
+  if (keys['KeyD']) p.vx += speed * 0.22;
+  if (keys['KeyW']) p.vy -= speed * 0.22;
+  if (keys['KeyS']) p.vy += speed * 0.22;
+  const spd = Math.hypot(p.vx, p.vy);
+  if (spd > speed) { p.vx = (p.vx / spd) * speed; p.vy = (p.vy / spd) * speed; }
+  if (keys['KeyF'] && p.kickCooldown === 0) kickBall(p, 0);
+}
+
+function handleP2Input(p) {
+  const speed = 4.5;
+  if (keys['ArrowLeft'])  p.vx -= speed * 0.22;
+  if (keys['ArrowRight']) p.vx += speed * 0.22;
+  if (keys['ArrowUp'])    p.vy -= speed * 0.22;
+  if (keys['ArrowDown'])  p.vy += speed * 0.22;
+  const spd = Math.hypot(p.vx, p.vy);
+  if (spd > speed) { p.vx = (p.vx / spd) * speed; p.vy = (p.vy / spd) * speed; }
+  if (keys['Digit1'] && p.kickCooldown === 0) kickBall(p, 1);
+}
+
+function kickBall(player, targetTeam) {
+  const dist = Math.hypot(ball.x - player.x, ball.y - player.y);
+  if (dist > player.r + ball.r + 22) return;
+  player.kickCooldown = 30; player.hasBall = false; ball.owner = null;
+  const goalX = targetTeam === 0 ? FIELD_PAD + GOAL_W : W - FIELD_PAD - GOAL_W;
+  const goalY = H / 2;
+  const dx = goalX - player.x, dy = goalY - player.y;
+  const len = Math.hypot(dx, dy);
+  const power = 10 + Math.random() * 4;
+  ball.vx = (dx / len) * power + (Math.random() - 0.5) * 3;
+  ball.vy = (dy / len) * power + (Math.random() - 0.5) * 4;
+  ball.spin = (Math.random() - 0.5) * 0.3;
+  spawnKickParticles(player.x, player.y, player.glow);
+}
+
+function updateBall() {
+  ball.x += ball.vx; ball.y += ball.vy; ball.spin *= 0.95;
+
+  if (ball.y - ball.r < FIELD_PAD)     { ball.y = FIELD_PAD + ball.r; ball.vy *= -0.7; }
+  if (ball.y + ball.r > H - FIELD_PAD) { ball.y = H - FIELD_PAD - ball.r; ball.vy *= -0.7; }
+
+  const inGoalZoneY = ball.y > GOAL_Y && ball.y < GOAL_Y + GOAL_H;
+
+  if (ball.x - ball.r < FIELD_PAD) {
+    if (inGoalZoneY) { triggerGoal(1); return; }
+    ball.x = FIELD_PAD + ball.r; ball.vx *= -0.7;
+  }
+  if (ball.x + ball.r > W - FIELD_PAD) {
+    if (inGoalZoneY) { triggerGoal(0); return; }
+    ball.x = W - FIELD_PAD - ball.r; ball.vx *= -0.7;
+  }
+
+  ball.vx *= 0.985; ball.vy *= 0.985;
+
+  [p1, p2].forEach(p => {
+    const dist = Math.hypot(ball.x - p.x, ball.y - p.y);
+    const minD = ball.r + p.r;
+    if (dist < minD && dist > 0) {
+      const nx = (ball.x - p.x) / dist, ny = (ball.y - p.y) / dist;
+      ball.x = p.x + nx * minD; ball.y = p.y + ny * minD;
+      const rel = (ball.vx - p.vx) * nx + (ball.vy - p.vy) * ny;
+      if (rel < 0) { ball.vx -= rel * nx * 1.2; ball.vy -= rel * ny * 1.2; }
+    }
+  });
+}
+
+function drawBall() {
+  ctx.save();
+  ctx.translate(ball.x, ball.y);
+  ctx.rotate(ball.spin * 10 + performance.now() / 200);
+  ctx.shadowColor = '#fff'; ctx.shadowBlur = 8;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(0, 0, ball.r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#222';
+  const hexes = [[0,0],[ball.r*0.5,-ball.r*0.55],[-ball.r*0.5,-ball.r*0.55],[ball.r*0.55,ball.r*0.4],[-ball.r*0.55,ball.r*0.4]];
+  hexes.forEach(([hx, hy]) => {
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i;
+      i === 0 ? ctx.moveTo(hx + Math.cos(a)*3.5, hy + Math.sin(a)*3.5)
+              : ctx.lineTo(hx + Math.cos(a)*3.5, hy + Math.sin(a)*3.5);
+    }
+    ctx.closePath(); ctx.fill();
+  });
+  ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = '#000';
+  ctx.beginPath(); ctx.ellipse(ball.x, ball.y + ball.r + 3, ball.r, 4, 0, 0, Math.PI * 2);
+  ctx.fill(); ctx.restore();
+}
+
+function drawField() {
+  const grassGrad = ctx.createLinearGradient(0, 0, 0, H);
+  grassGrad.addColorStop(0, '#1a4a1a');
+  grassGrad.addColorStop(0.5, '#1e551e');
+  grassGrad.addColorStop(1, '#1a4a1a');
+  ctx.fillStyle = grassGrad; ctx.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < 9; i++) {
+    if (i % 2 === 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.025)';
+      ctx.fillRect(FIELD_PAD + i * ((W - FIELD_PAD * 2) / 9), FIELD_PAD,
+                   (W - FIELD_PAD * 2) / 9, H - FIELD_PAD * 2);
+    }
+  }
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2;
+  ctx.strokeRect(FIELD_PAD, FIELD_PAD, W - FIELD_PAD * 2, H - FIELD_PAD * 2);
+
+  ctx.beginPath(); ctx.moveTo(W/2, FIELD_PAD); ctx.lineTo(W/2, H-FIELD_PAD); ctx.stroke();
+
+  ctx.beginPath(); ctx.arc(W/2, H/2, 60, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.beginPath(); ctx.arc(W/2, H/2, 4, 0, Math.PI*2); ctx.fill();
+
+  const areaH = 180, areaW = 90;
+  ctx.strokeRect(FIELD_PAD, H/2-areaH/2, areaW, areaH);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fillRect(FIELD_PAD, H/2-areaH/2, areaW, areaH);
+  ctx.strokeRect(W-FIELD_PAD-areaW, H/2-areaH/2, areaW, areaH);
+  ctx.fillRect(W-FIELD_PAD-areaW, H/2-areaH/2, areaW, areaH);
+
+  const sAreaH = 90, sAreaW = 44;
+  ctx.strokeRect(FIELD_PAD, H/2-sAreaH/2, sAreaW, sAreaH);
+  ctx.strokeRect(W-FIELD_PAD-sAreaW, H/2-sAreaH/2, sAreaW, sAreaH);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.beginPath(); ctx.arc(FIELD_PAD+60, H/2, 3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W-FIELD_PAD-60, H/2, 3, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  drawGoal(FIELD_PAD - GOAL_W, '#4fc3f7');
+  drawGoal(W - FIELD_PAD, '#ef5350');
+}
+
+function drawGoal(x, color) {
+  ctx.save();
+  ctx.shadowColor = color; ctx.shadowBlur = 20;
+  for (let gy = GOAL_Y; gy < GOAL_Y + GOAL_H; gy += 10) {
+    ctx.beginPath(); ctx.moveTo(x, gy);
+    ctx.lineTo(x + GOAL_W * (x < W/2 ? 1 : -1), gy);
+    ctx.strokeStyle = color + '44'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  for (let gx = 0; gx <= GOAL_W; gx += 10) {
+    const rx = x < W/2 ? x + gx : x - gx;
+    ctx.beginPath(); ctx.moveTo(rx, GOAL_Y); ctx.lineTo(rx, GOAL_Y + GOAL_H); ctx.stroke();
+  }
+  ctx.strokeStyle = color; ctx.lineWidth = 4;
+  ctx.beginPath();
+  if (x < W/2) {
+    ctx.moveTo(x+GOAL_W, GOAL_Y); ctx.lineTo(x, GOAL_Y);
+    ctx.lineTo(x, GOAL_Y+GOAL_H); ctx.lineTo(x+GOAL_W, GOAL_Y+GOAL_H);
+  } else {
+    ctx.moveTo(x-GOAL_W, GOAL_Y); ctx.lineTo(x, GOAL_Y);
+    ctx.lineTo(x, GOAL_Y+GOAL_H); ctx.lineTo(x-GOAL_W, GOAL_Y+GOAL_H);
+  }
+  ctx.stroke(); ctx.restore();
+}
+
+function triggerGoal(team) {
+  score[team]++;
+  document.getElementById('score' + (team+1)).textContent = score[team];
+  const flash = document.getElementById('goal-flash');
+  const scorer = document.getElementById('goal-scorer');
+  scorer.textContent = team === 0 ? '¡AZUL FC ANOTA!' : '¡ROJO FC ANOTA!';
+  scorer.style.color = team === 0 ? '#4fc3f7' : '#ef5350';
+  flash.classList.remove('show'); void flash.offsetWidth; flash.classList.add('show');
+  spawnGoalConfetti();
+  setTimeout(() => { flash.classList.remove('show'); resetBall(); resetPositions(); }, 1500);
+}
+
+function spawnGoalConfetti() {
+  for (let i = 0; i < 60; i++) {
+    confetti.push({
+      x: Math.random() * W, y: -10,
+      vx: (Math.random()-0.5)*5, vy: 2+Math.random()*5,
+      r: 4+Math.random()*6,
+      color: ['#76c442','#4fc3f7','#ef5350','#fff700','#ff80ab'][Math.floor(Math.random()*5)],
+      rot: Math.random()*Math.PI*2, spin: (Math.random()-0.5)*0.2,
+      life: 120+Math.random()*60
+    });
+  }
+}
+
+function updateDrawConfetti() {
+  confetti = confetti.filter(c => c.life > 0);
+  confetti.forEach(c => {
+    c.x += c.vx; c.y += c.vy; c.rot += c.spin; c.life--;
+    ctx.save(); ctx.globalAlpha = Math.min(1, c.life/30);
+    ctx.translate(c.x, c.y); ctx.rotate(c.rot);
+    ctx.fillStyle = c.color; ctx.fillRect(-c.r/2, -c.r/4, c.r, c.r/2);
+    ctx.restore();
+  });
+}
+
+function spawnKickParticles(x, y, color) {
+  for (let i = 0; i < 8; i++) {
+    const a = Math.random() * Math.PI * 2;
+    kickParticles.push({ x, y, vx: Math.cos(a)*(2+Math.random()*3), vy: Math.sin(a)*(2+Math.random()*3), life: 20, color });
+  }
+}
+function updateDrawKickParticles() {
+  kickParticles = kickParticles.filter(p => p.life > 0);
+  kickParticles.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.life--;
+    ctx.globalAlpha = p.life / 20; ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+let p1, p2;
+function resetPositions() {
+  p1.x = W*0.28; p1.y = H/2; p1.vx = 0; p1.vy = 0;
+  p2.x = W*0.72; p2.y = H/2; p2.vx = 0; p2.vy = 0;
+}
+function initPlayers() {
+  p1 = new Player(W*0.28, H/2, '#1565c0', '#4fc3f7', 'AZUL', 0);
+  p2 = new Player(W*0.72, H/2, '#c62828', '#ef5350', 'ROJO', 1);
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!gameRunning) return;
+    gameTime--;
+    const m = Math.floor(gameTime/60).toString().padStart(2,'0');
+    const s = (gameTime%60).toString().padStart(2,'0');
+    document.getElementById('timer-display').textContent = m+':'+s;
+    if (gameTime <= 0) endGame();
+  }, 1000);
+}
+
+function endGame() {
+  gameRunning = false; clearInterval(timerInterval); cancelAnimationFrame(animId);
+  let winner, color;
+  if (score[0] > score[1])      { winner = '🏆 AZUL FC GANA'; color = '#4fc3f7'; }
+  else if (score[1] > score[0]) { winner = '🏆 ROJO FC GANA'; color = '#ef5350'; }
+  else                          { winner = '🤝 EMPATE';        color = '#76c442'; }
+  const overlay = document.getElementById('overlay');
+  overlay.innerHTML = `
+    <div style="font-family:'Anton',cursive;font-size:18px;letter-spacing:4px;color:#5a8a5a;margin-bottom:8px">PARTIDO TERMINADO</div>
+    <div style="font-family:'Anton',cursive;font-size:52px;letter-spacing:6px;color:${color};text-shadow:0 0 30px ${color}88;margin-bottom:6px">${winner}</div>
+    <div style="font-family:'Anton',cursive;font-size:34px;letter-spacing:8px;color:#fff;margin-bottom:24px">${score[0]} — ${score[1]}</div>
+    <button class="ov-btn" onclick="startGame()">▶ REVANCHA</button>
+  `;
+  overlay.style.display = 'flex';
+  spawnGoalConfetti(); spawnGoalConfetti();
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, W, H);
+  drawField();
+  if (gameRunning) {
+    handleP1Input(p1); handleP2Input(p2);
+    p1.update(); p2.update();
+    updateBall();
+  }
+  p1.draw(); p2.draw();
+  drawBall();
+  updateDrawKickParticles();
+  updateDrawConfetti();
+  animId = requestAnimationFrame(gameLoop);
+}
+
+function startGame() {
+  score = [0, 0]; gameTime = GAME_DURATION;
+  document.getElementById('score1').textContent = '0';
+  document.getElementById('score2').textContent = '0';
+  document.getElementById('timer-display').textContent = '02:00';
+  document.getElementById('overlay').style.display = 'none';
+  confetti = []; kickParticles = [];
+  initPlayers(); resetBall();
+  gameRunning = true;
+  startTimer();
+  cancelAnimationFrame(animId);
+  gameLoop();
+}
+
+gameLoop();
+</script>
+</body>
+</html>
