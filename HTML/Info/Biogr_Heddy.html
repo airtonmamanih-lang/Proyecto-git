@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trayectoria Académica y Profesional - Mg. Heddy Colca</title>
+    <style>
+        :root {
+            --primary-color: #0d3b66; /* Azul San Marcos */
+            --secondary-color: #800020; /* Carmesí Institucional */
+            --accent-color: #f4d35e; /* Dorado de gala */
+            --bg-light: #f8f9fa;
+            --text-dark: #2b2d42;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Encabezado Principal */
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #001f3f 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .subtitle-unmsm {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            margin-top: 0.5rem;
+        }
+
+        /* Contenedor y Navegación */
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Tarjeta de Presentación / Perfil */
+        .profile-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        /* Lista de Datos */
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .info-list strong {
+            color: var(--secondary-color);
+        }
+
+        /* Línea de Tiempo (Recorrido) */
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 2rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-2rem - 7px);
+            top: 5px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--secondary-color);
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cuadrícula de Áreas / Logros */
+        .grid-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-sections {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card ul {
+            padding-left: 1.2rem;
+        }
+
+        .card li {
+            margin-bottom: 0.6rem;
+        }
+
+        /* Pie de página */
+        footer {
+            background-color: #1a1a24;
+            color: #a0aec0;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        footer p {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mg. Heddy Luisa Colca Merizalde</h1>
+        <p>Proyecto Biográfico de Trayectoria Docente e Institucional</p>
+        <div class="subtitle-unmsm">FISI - Universidad Nacional Mayor de San Marcos</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Menú de navegación interna -->
+        <nav>
+            <a href="#perfil">Perfil Profesional</a>
+            <a href="#recorrido">Línea de Tiempo</a>
+            <a href="#docencia">Labor Académica</a>
+            <a href="#gestion">Gestión e Investigación</a>
+        </nav>
+
+        <!-- Sección: Perfil Resumen -->
+        <section id="perfil" class="profile-card">
+            <div class="profile-grid">
+                <div>
+                    <h2>Introducción y Perfil</h2>
+                    <p>
+                        La <strong>Mg. Heddy Colca</strong> es una destacada docente e ingeniera de la Facultad de Ingeniería de Sistemas e Informática (FISI) de la Universidad Nacional Mayor de San Marcos. Con una trayectoria caracterizada por la rigurosidad académica y el compromiso institucional, ha formado a múltiples generaciones de ingenieros en el desarrollo de competencias lógicas, algorítmicas y de gestión de proyectos.
+                    </p>
+                    <p>
+                        Además de su rol en el aula, su carrera en la Decana de América destaca por su constante participación en comisiones de evaluación, comités de gestión académica y el fortalecimiento de los planes curriculares de la facultad, adaptándolos a las exigencias tecnológicas contemporáneas.
+                    </p>
+                </div>
+                <div>
+                    <h2>Datos Institucionales</h2>
+                    <ul class="info-list">
+                        <li><strong>Facultad:</strong> Ingeniería de Sistemas e Informática (FISI)</li>
+                        <li><strong>Institución:</strong> UNMSM</li>
+                        <li><strong>Grado Académico:</strong> Magíster / Ingeniera</li>
+                        <li><strong>Áreas Clave:</strong> Algorítmica, Gestión de Requerimientos, Calidad de Software, Evaluación Académica.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Línea de Tiempo / Recorrido Histórico -->
+        <section id="recorrido" class="profile-card">
+            <h2>El Recorrido Profesional e Histórico</h2>
+            <p>Un desglose cronológico de las etapas clave en la construcción de su legado docente en la Universidad de San Marcos:</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-year">Etapa de Formación y Consolidación</span>
+                    <div class="timeline-title">Especialización en Ciencias de la Computación e Ingeniería</div>
+                    <p>Consolidación de su formación de pregrado y posterior obtención de grados de maestría, enfocándose en la optimización de procesos informáticos y metodologías de la enseñanza de la ingeniería.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="timeline-year">Incorporación a la Docencia en la FISI</span>
+                    <div class="timeline-title">Cátedra en Ciencias de la Computación e Ingeniería de Sistemas</div>
+                    <p>Asume la docencia en asignaturas críticas del bloque de carrera. Se posiciona como una docente firme en el rigor técnico, orientada a que los estudiantes no solo programen, sino que entiendan la arquitectura del software.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-year">Gestión y Roles Administrativos</span>
+                    <div class="timeline-title">Participación en Órganos directivos y Comisiones de Calidad</div>
+                    <p>Apoyo activo en los procesos de acreditación de las escuelas profesionales de la FISI. Participación en comisiones encargadas de revisar los estándares educativos para mantener certificaciones nacionales e internacionales (como ICACIT).</p>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-year">Madurez Académica y Tutoría</span>
+                    <div class="timeline-title">Dirección de Proyectos y Mentoría de Tesis</div>
+                    <p>Asesoramiento a estudiantes de los últimos ciclos en el desarrollo de sus proyectos de fin de carrera y tesis de titulación, promoviendo soluciones tecnológicas con impacto social y empresarial.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secciones en Paralelo: Docencia y Gestión -->
+        <div class="grid-sections">
+            
+            <section id="docencia" class="card">
+                <h2>Labor Docente y Enfoque Pedagógico</h2>
+                <p>Su desempeño en el aula se rige bajo el principio de excelencia metodológica. Ha dictado cátedra en asignaturas clave como:</p>
+                <ul>
+                    <li><strong>Fundamentos de Programación / Algorítmica:</strong> Estructurando el pensamiento lógico de los alumnos ingresantes.</li>
+                    <li><strong>Ingeniería de Requerimientos:</strong> Enseñando la importancia de la comunicación entre el cliente y el equipo técnico.</li>
+                    <li><strong>Gestión de Proyectos de Software:</strong> Guiando la transición de estudiantes a líderes técnicos eficientes.</li>
+                </ul>
+            </section>
+
+            <section id="gestion" class="card">
+                <h2>Aportes en Gestión e Investigación</h2>
+                <p>El impacto de la Mg. Heddy Colca trasciende las aulas mediante actividades de soporte institucional:</p>
+                <ul>
+                    <li><strong>Modernización Curricular:</strong> Colaboración en las mesas de trabajo para la actualización de las mallas curriculares de Ingeniería de Sistemas e Ingeniería de Software.</li>
+                    <li><strong>Jurado de Tesis:</strong> Rol crítico y evaluador en sustentaciones de grado, asegurando el nivel científico de los egresados.</li>
+                    <li><strong>Identidad Sanmarquina:</strong> Promoción de la ética profesional y la responsabilidad social en la práctica de la ingeniería.</li>
+                </ul>
+            </section>
+
+        </div>
+
+        <!-- Conclusión del Trabajo de Investigación -->
+        <section class="profile-card" style="border-left-color: var(--secondary-color);">
+            <h2>Conclusiones de la Investigación Biográfica</h2>
+            <p>
+                El recorrido de la <strong>Mg. Heddy Colca</strong> dentro de la FISI - UNMSM ejemplifica la figura del docente universitario integral: aquel que balancea la exigencia técnica en el laboratorio con el planeamiento estratégico en las oficinas administrativas. Su legado radica en la solidez de los profesionales que hoy en día lideran el sector tecnológico en el Perú y el extranjero, quienes recuerdan sus aulas como un espacio de alta exigencia y aprendizaje significativo.
+            </p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p><strong>Proyecto de Investigación Biográfica Documental</strong></p>
+        <p>Facultad de Ingeniería de Sistemas e Informática — UNMSM</p>
+        <p>&copy; 2026 | Desarrollado con fines académicos e históricos</p>
+    </footer>
+
+</body>
+</html>
