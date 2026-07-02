@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigación FISI - UNMSM</title>
+    <style>
+        :root {
+            --fisi-blue: #003366; /* Azul Tecnológico FISI */
+            --fisi-cyan: #00a8cc; /* Celeste de acento */
+            --dark-gray: #2d3748;
+            --light-bg: #f7fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--dark-gray);
+        }
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, var(--fisi-blue) 0%, #001f4d 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid var(--fisi-cyan);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        header h2 {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.3rem;
+            color: var(--fisi-cyan);
+            font-weight: 400;
+        }
+
+        header p {
+            margin: 1rem 0 0 0;
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        /* Barra de metadatos */
+        .research-meta {
+            max-width: 1000px;
+            margin: -1.5rem auto 2rem auto;
+            background: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            position: relative;
+            z-index: 10;
+            border-left: 5px solid var(--fisi-cyan);
+        }
+
+        .meta-box span {
+            display: block;
+            font-size: 0.85rem;
+            color: #718096;
+            text-transform: uppercase;
+        }
+
+        .meta-box strong {
+            font-size: 1rem;
+            color: var(--fisi-blue);
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Secciones de la Investigación */
+        section {
+            background: white;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        h3 {
+            color: var(--fisi-blue);
+            font-size: 1.4rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Bloques de Código / Algoritmos (Muy común en la FISI) */
+        pre {
+            background-color: #1a202c;
+            color: #f7fafc;
+            padding: 1.2rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Tabla de Métricas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #edf2f7;
+            color: var(--fisi-blue);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--fisi-blue);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--fisi-cyan);
+        }
+
+        footer p {
+            margin: 0.3rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>UNIVERSIDAD NACIONAL MAYOR DE SAN MARCOS</h1>
+        <h2>Facultad de Ingeniería de Sistemas e Informática (FISI)</h2>
+        <p>Unidad de Posgrado / Instituto de Investigación de Sistemas e Informática (IISI)</p>
+    </header>
+
+    <div class="research-meta">
+        <div class="meta-box">
+            <span>Autores</span>
+            <strong>Bach. Silva Cárdenas, Carlos<br>Dr. Ramos Palomino, Enrique (Asesor)</strong>
+        </div>
+        <div class="meta-box">
+            <span>Línea de Investigación</span>
+            <strong>Inteligencia Artificial y Reconocimiento de Patrones</strong>
+        </div>
+        <div class="meta-box">
+            <span>Laboratorio</span>
+            <strong>Lab. de Visión Computacional - FISI</strong>
+        </div>
+        <div class="meta-box">
+            <span>Año Académico</span>
+            <strong>2026</strong>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <section>
+            <h3>Título del Proyecto de Tesis / Investigación</h3>
+            <p style="font-size: 1.3rem; font-weight: bold; color: var(--fisi-blue); margin: 0;">
+                Optimización de Redes Neuronales Convolucionales (CNN) para la detección temprana de anomalías radiológicas en el sector de salud pública del Perú.
+            </p>
+        </section>
+
+        <section>
+            <h3>Resumen / Abstract</h3>
+            <p>
+                El presente trabajo desarrollado en la <strong>FISI - UNMSM</strong> propone un modelo optimizado basado en la arquitectura <em>ResNet-50</em> para el procesamiento de imágenes de rayos X de tórax. El objetivo principal consiste en reducir los falsos negativos en el diagnóstico de patologías pulmonares prevalentes en zonas vulnerables de Lima Metropolitana. Mediante técnicas de transferencia de conocimiento (Transfer Learning) y aumentación de datos adaptativa, se logró un entorno eficiente capaz de ejecutarse en hardware de recursos limitados, facilitando su futura implementación en centros de salud periféricos.
+            </p>
+        </section>
+
+        <section>
+            <h3>1. Planteamiento del Problema Tecnológico</h3>
+            <p>
+                En los centros de salud asistenciales del Perú, la disponibilidad de médicos especialistas en radiología es severamente limitada. El procesamiento digital de imágenes asistido por computadora (CAD) surge como una alternativa viable. No obstante, los modelos de Deep Learning convencionales exigen capacidades de cómputo (GPUs de alta gama) inaccesibles para la realidad de muchas postas médicas locales.
+            </p>
+            <p>
+                Por lo tanto, la investigación de la FISI responde a la pregunta: ¿Cómo reestructurar hiperparámetros y capas densas para disminuir la carga computacional en FLOPS sin degradar la precisión del modelo en diagnósticos críticos?
+            </p>
+        </section>
+
+        <section>
+            <h3>2. Arquitectura de Software y Algoritmo</h3>
+            <p>
+                Se implementó un pipeline en Python utilizando la librería PyTorch. A continuación, se detalla un segmento modular del script diseñado en nuestros laboratorios para la congelación selectiva de capas (Layer Freezing):
+            </p>
+<pre>
+import torch
+import torchvision.models as models
+
+def inicializar_modelo_fisi(num_clases=3):
+    # Carga de ResNet preentrenada
+    modelo = models.resnet50(pretrained=True)
+    
+    # Congelar las primeras 4 capas residuales para preservar características base
+    contador = 0
+    for child in modelo.children():
+        contador += 1
+        if contador < 7:
+            for param in child.parameters():
+                param.requires_grad = False
+                
+    # Reestructuración de la capa totalmente conectada (FC) para la realidad local
+    num_ftrs = modelo.fc.in_features
+    modelo.fc = torch.nn.Sequential(
+        torch.nn.Linear(num_ftrs, 256),
+        torch.nn.ReLU(),
+        torch.nn.Dropout(0.4),
+        torch.nn.Linear(256, num_clases)
+    )
+    return modelo
+</pre>
+        </section>
+
+        <section>
+            <h3>3. Resultados Experimentales</h3>
+            <p>Las pruebas de rendimiento y estrés del algoritmo se realizaron con datasets locales anonimizados, comparando el modelo optimizado de la FISI frente al estándar de la industria:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrica de Evaluación</th>
+                        <th>Modelo Estándar (ResNet-50)</th>
+                        <th>Modelo Propuesto (FISI-Optimizado)</th>
+                        <th>Mejora Impactada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Precisión (Accuracy)</strong></td>
+                        <td>91.4%</td>
+                        <td>93.8%</td>
+                        <td>+ 2.4%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sensibilidad (Recall)</strong></td>
+                        <td>88.2%</td>
+                        <td>94.1%</td>
+                        <td>+ 5.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tamaño del Modelo (MB)</strong></td>
+                        <td>98 MB</td>
+                        <td>41 MB</td>
+                        <td>- 58.1% (Más ligero)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tiempo de Inferencia (por imagen)</strong></td>
+                        <td>1.85 segundos</td>
+                        <td>0.42 segundos</td>
+                        <td>Reducción significativa</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h3>4. Conclusiones e Impacto en Sistemas</h3>
+            <p>
+                La optimización algorítmica realizada demuestra que es viable desplegar sistemas de soporte de decisiones médicas de alta fidelidad en infraestructuras informáticas modestas. Este enfoque de ingeniería de sistemas no solo resuelve un reto matemático y computacional, sino que genera un impacto social directo alineado con la misión de proyección social de la Decana de América.
+            </p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Instituto de Investigación de Sistemas e Informática (IISI)</p>
+        <p>Garantizando la excelencia académica y tecnológica médica - Lima, Perú</p>
+        <p style="font-size: 0.75rem; opacity: 0.7; margin-top: 15px;">© 2026 UNMSM. Desarrollado bajo los estándares de formato de publicación científica de la facultad.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,1153 @@
+import React, { useState } from 'react';
+import { 
+  BookOpen, 
+  Award, 
+  FileText, 
+  Code, 
+  CheckSquare, 
+  Sparkles, 
+  Copy, 
+  Check, 
+  Info, 
+  HelpCircle, 
+  ArrowRight, 
+  Play, 
+  Layout, 
+  ExternalLink, 
+  ChevronRight, 
+  BookOpenCheck,
+  ChevronLeft
+} from 'lucide-react';
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('intro');
+  const [copied, setCopied] = useState(false);
+  const [selectedCodeLine, setSelectedCodeLine] = useState(null);
+  
+  // State for Monograph Template Generator
+  const [templateConfig, setTemplateConfig] = useState({
+    university: 'Universidad Nacional Mayor de San Marcos',
+    faculty: 'Facultad de Ingeniería de Sistemas',
+    title: 'Impacto de la Inteligencia Artificial en la Educación Superior',
+    subtitle: 'Un análisis sobre metodologías de aprendizaje adaptativo',
+    author: 'Sofía Valentina Ramos Pérez',
+    advisor: 'Dr. Alejandro Gómez Silva',
+    city: 'Lima',
+    year: '2026',
+    chapters: ['Introducción', 'Marco Teórico', 'Análisis Metodológico', 'Resultados', 'Conclusiones']
+  });
+
+  // State for Quiz
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+
+  // Checklist state
+  const [checklist, setChecklist] = useState([
+    { id: 1, text: 'Crear una cuenta gratuita en Overleaf', completed: false },
+    { id: 2, text: 'Configurar el documento con \\documentclass y márgenes', completed: false },
+    { id: 3, text: 'Diseñar la carátula o portada académica', completed: false },
+    { id: 4, text: 'Generar el índice automático con \\tableofcontents', completed: false },
+    { id: 5, text: 'Crear un archivo .bib para las referencias bibliográficas', completed: false },
+    { id: 6, text: 'Insertar al menos una imagen con el entorno figure', completed: false },
+    { id: 7, text: 'Crear una tabla formal con el paquete booktabs', completed: false },
+    { id: 8, text: 'Compilar el documento y verificar que no haya "Bad Boxes" graves', completed: false }
+  ]);
+
+  const toggleChecklist = (id) => {
+    setChecklist(checklist.map(item => 
+      item.id === id ? { ...item, completed: !item.completed } : item
+    ));
+  };
+
+  const handleTemplateChange = (e) => {
+    const { name, value } = e.target;
+    setTemplateConfig(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleChapterChange = (index, value) => {
+    const updatedChapters = [...templateConfig.chapters];
+    updatedChapters[index] = value;
+    setTemplateConfig(prev => ({
+      ...prev,
+      chapters: updatedChapters
+    }));
+  };
+
+  const addChapterField = () => {
+    if (templateConfig.chapters.length < 8) {
+      setTemplateConfig(prev => ({
+        ...prev,
+        chapters: [...prev.chapters, `Capítulo ${prev.chapters.length + 1}`]
+      }));
+    }
+  };
+
+  const removeChapterField = (index) => {
+    if (templateConfig.chapters.length > 2) {
+      const updatedChapters = templateConfig.chapters.filter((_, i) => i !== index);
+      setTemplateConfig(prev => ({
+        ...prev,
+        chapters: updatedChapters
+      }));
+    }
+  };
+
+  // Generate LaTeX Code based on form state
+  const generateLaTeXCode = () => {
+    const chaptersLaTeX = templateConfig.chapters.map((chap, idx) => {
+      return `\\section{${chap}}\n\\label{sec:${chap.toLowerCase().replace(/\s+/g, '_')}}\nEste es el contenido correspondiente a la sección de ${chap.toLowerCase()}. Aquí puedes empezar a redactar tu investigación, estructurando tus argumentos con el soporte de literatura científica.\n`;
+    }).join('\n');
+
+    return `\\documentclass[12pt, a4paper]{article}
+
+% --- PAQUETES ESENCIALES ---
+\\usepackage[utf8]{inputenc} % Codificación de caracteres
+\\usepackage[spanish]{babel} % Idioma español e índices automáticos
+\\usepackage{geometry} % Configuración de márgenes
+\\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm} % Formato estándar APA/Monografías
+\\usepackage{graphicx} % Para insertar imágenes y gráficos
+\\usepackage{booktabs} % Tablas con estilo académico y profesional
+\\usepackage{amsmath, amssymb} % Soporte matemático robusto
+\\usepackage{setspace} % Espaciado de interlineado
+\\usepackage{hyperref} % Enlaces interactivos dentro del PDF
+\\usepackage{cite} % Manejo básico de citación bibliográfica
+
+\\onehalfspacing % Interlineado 1.5 (estándar para monografías)
+
+% --- CONFIGURACIÓN DE METADATOS ---
+\\title{${templateConfig.title}}
+\\author{${templateConfig.author}}
+\\date{\\today}
+
+\\begin{document}
+
+% ==========================================
+%            PORTADA / CARÁTULA
+% ==========================================
+\\begin{titlepage}
+    \\centering
+    {\\scshape\\large ${templateConfig.university} \\par}
+    {\\scshape\\normalsize ${templateConfig.faculty} \\par}
+    \\vspace{1.5cm}
+    {\\includegraphics[width=0.25\\textwidth]{logo_universidad.png}\\par} % Reemplazar por imagen real
+    \\vspace{1.5cm}
+    {\\Large\\bfseries ${templateConfig.title} \\par}
+    \\vspace{0.5cm}
+    {\\large\\itshape ${templateConfig.subtitle} \\par}
+    \\vspace{2.5cm}
+    {\\large\\textbf{Autor:} ${templateConfig.author} \\par}
+    {\\large\\textbf{Asesor:} ${templateConfig.advisor} \\par}
+    \\vfill
+    {\\large ${templateConfig.city}, ${templateConfig.year} \\par}
+\\end{titlepage}
+
+% ==========================================
+%            ÍNDICES Y PREFACIO
+% ==========================================
+\\pagenumbering{roman} % Números romanos para preliminares
+
+\\section*{Dedicatoria}
+\\textit{A mis padres y maestros, quienes con su paciencia infinita y sabios consejos guiaron mi camino académico hacia la consecución de esta investigación.}
+\\newpage
+
+\\tableofcontents % Índice general automático
+\\newpage
+
+\\listoffigures % Índice de figuras automático (opcional)
+\\listoftables % Índice de tablas automático (opcional)
+\\newpage
+
+% ==========================================
+%            CUERPO DEL TRABAJO
+% ==========================================
+\\pagenumbering{arabic} % Volvemos a números arábigos
+\\setcounter{page}{1}
+
+${chaptersLaTeX}
+
+% ==========================================
+%      EJEMPLOS DE ELEMENTOS COMUNES
+% ==========================================
+\\section{Guía de Elementos Útiles para LaTeX}
+Aquí se muestran ejemplos rápidos para tu monografía:
+
+\\subsection{Inserción de Imágenes}
+Para añadir figuras estructuradas:
+\\begin{figure}[htbp]
+    \\centering
+    % \\includegraphics[width=0.6\\textwidth]{mi_grafico.png} % Descomenta al subir tu imagen
+    \\framebox{\\parbox{0.5\\textwidth}{\\centering \\vspace{1.5cm} [Espacio para Imagen] \\vspace{1.5cm}}}
+    \\caption{Diagrama conceptual de la metodología.}
+    \\label{fig:diagrama}
+\\end{figure}
+
+\\subsection{Inserción de Tablas Académicas}
+Evita las líneas verticales en tablas científicas:
+\\begin{table}[htbp]
+    \\centering
+    \\caption{Resumen de variables estudiadas.}
+    \\begin{tabular}{lcc}
+        \\toprule
+        \\textbf{Variable} & \\textbf{Población (N)} & \\textbf{Efecto (\\%)} \\\\
+        \\midrule
+        Grupo Control & 150 & 12.4 \\\\
+        Grupo Experimental & 155 & 45.8 \\\\
+        \\bottomrule
+    \\end{tabular}
+    \\label{tab:variables}
+\\end{table}
+
+\\subsection{Ecuaciones Matemáticas}
+Se puede insertar fórmulas en línea como $E = mc^2$ o de bloque numeradas como la ecuación \\ref{eq:normal}:
+\\begin{equation}
+    f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} e^{-\\frac{1}{2}\\left(\\frac{x-\\mu}{\\sigma}\\right)^2}
+    \\label{eq:normal}
+\\end{equation}
+
+% ==========================================
+%               REFERENCIAS
+% ==========================================
+\\newpage
+\\begin{thebibliography}{99}
+    \\bibitem{autor2024} 
+    Apellido, Nombre (2024). 
+    \\textit{Título del libro o publicación científica}. 
+    Editorial o Revista Académica.
+    
+    \\bibitem{ia_educacion}
+    García, J., \\& Martínez, L. (2025).
+    \\textit{La Inteligencia Artificial en el Aprendizaje Personalizado}.
+    Journal of Educational Technology, 45(2), 112-128.
+\\end{thebibliography}
+
+\\end{document}`;
+  };
+
+  const copyToClipboard = () => {
+    const code = generateLaTeXCode();
+    // Use fallback for clipboard inside iframes if navigator.clipboard is unavailable
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Error al copiar: ', err);
+    }
+  };
+
+  // Interactive Code Panel Data
+  const interactiveCodeSegments = [
+    {
+      id: 1,
+      line: "\\documentclass[12pt, a4paper]{article}",
+      label: "Clase de Documento",
+      desc: "Define el tipo de archivo. Para monografías medianas se usa 'article'. Para tesis o libros largos se prefiere 'report' o 'book'. Define fuente de 12pt y tamaño de papel A4."
+    },
+    {
+      id: 2,
+      line: "\\usepackage[spanish]{babel}",
+      label: "Idioma del Documento",
+      desc: "Indispensable para monografías en español. Traduce automáticamente palabras del sistema (por ejemplo, escribe 'Índice de figuras' en lugar de 'List of Figures' y 'Capítulo' en lugar de 'Chapter')."
+    },
+    {
+      id: 3,
+      line: "\\usepackage{geometry} \\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}",
+      label: "Márgenes del Documento",
+      desc: "Establece los márgenes requeridos. El margen izquierdo de 3cm suele dejarse amplio para permitir la encuadernación de la monografía impresa."
+    },
+    {
+      id: 4,
+      line: "\\begin{titlepage} ... \\end{titlepage}",
+      label: "La Portada / Carátula",
+      desc: "Contiene la información oficial de la monografía. El uso del entorno 'titlepage' suprime automáticamente la numeración de página en esta sección inicial."
+    },
+    {
+      id: 5,
+      line: "\\tableofcontents",
+      label: "Índice Automático",
+      desc: "¡La magia de LaTeX! Genera de forma automatizada la tabla de contenidos recolectando todas las instrucciones \\section, \\subsection y sus páginas correspondientes."
+    },
+    {
+      id: 6,
+      line: "\\begin{figure} \\centering ... \\caption{...} \\end{figure}",
+      label: "Entorno Flotante de Imagen",
+      desc: "Las imágenes se manejan de forma flotante. El compilador de LaTeX decidirá la mejor posición estética de la página para acomodar la imagen con su numeración e índice automático."
+    },
+    {
+      id: 7,
+      line: "\\begin{thebibliography}{99} ... \\end{thebibliography}",
+      label: "Bibliografía Manual o BibTeX",
+      desc: "Permite listar las referencias de la monografía. En proyectos avanzados, se usa BibTeX con un archivo .bib separado para una gestión bibliográfica totalmente automatizada."
+    }
+  ];
+
+  // Quiz Data
+  const quizQuestions = [
+    {
+      id: 1,
+      q: "¿Qué comando se utiliza para estructurar el título principal de un capítulo o sección en la clase 'article'?",
+      options: [
+        { key: 'A', text: '\\chapter{Título}' },
+        { key: 'B', text: '\\section{Título}' },
+        { key: 'C', text: '\\title{Título}' },
+        { key: 'D', text: '\\makeheader{Título}' }
+      ],
+      correct: 'B',
+      explanation: "En la clase 'article' no existe el comando \\chapter. Se utiliza \\section como la división de mayor jerarquía del cuerpo del documento."
+    },
+    {
+      id: 2,
+      q: "¿Para qué sirve el comando \\tableofcontents?",
+      options: [
+        { key: 'A', text: 'Para insertar una tabla hecha a mano.' },
+        { key: 'B', text: 'Para importar un archivo Excel externo.' },
+        { key: 'C', text: 'Para generar de manera automática el índice de contenidos del documento.' },
+        { key: 'D', text: 'Para crear un índice solo de las imágenes insertadas.' }
+      ],
+      correct: 'C',
+      explanation: "\\tableofcontents recopila los títulos \\section y \\subsection junto con sus páginas de forma automática al compilar."
+    },
+    {
+      id: 3,
+      q: "¿Por qué se utiliza el paquete [spanish]{babel} en LaTeX?",
+      options: [
+        { key: 'A', text: 'Para corregir la ortografía con inteligencia artificial.' },
+        { key: 'B', text: 'Para traducir el código de LaTeX al español.' },
+        { key: 'C', text: 'Para que LaTeX adapte el silabeo, fechas, y títulos automáticos (como el índice o cuadros) al idioma español.' },
+        { key: 'D', text: 'Para cambiar el estilo de las fuentes a letras manuscritas.' }
+      ],
+      correct: 'C',
+      explanation: "El paquete babel en español se encarga de cambiar términos internos como 'References' a 'Referencias' y habilitar la correcta división silábica del español."
+    },
+    {
+      id: 4,
+      q: "En LaTeX, ¿cómo se denominan los paquetes que añaden nuevas funcionalidades y dónde se colocan?",
+      options: [
+        { key: 'A', text: 'Se llaman plugins y se colocan al final del documento.' },
+        { key: 'B', text: 'Se cargan con \\usepackage en el preámbulo (antes de \\begin{document}).' },
+        { key: 'C', text: 'Se descargan de una tienda de Overleaf y se instalan en la computadora.' },
+        { key: 'D', text: 'Se escriben directamente dentro de la portada.' }
+      ],
+      correct: 'B',
+      explanation: "Los paquetes de LaTeX amplían el software y deben ser cargados en el preámbulo del documento utilizando el comando \\usepackage{nombre_paquete}."
+    }
+  ];
+
+  const handleQuizAnswer = (qId, optionKey) => {
+    setQuizAnswers(prev => ({
+      ...prev,
+      [qId]: optionKey
+    }));
+  };
+
+  const submitQuiz = () => {
+    let calculatedScore = 0;
+    quizQuestions.forEach(q => {
+      if (quizAnswers[q.id] === q.correct) {
+        calculatedScore += 25; // 4 questions total = 100 points
+      }
+    });
+    setScore(calculatedScore);
+    setQuizSubmitted(true);
+  };
+
+  const resetQuiz = () => {
+    setQuizAnswers({});
+    setQuizSubmitted(false);
+    setScore(0);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-550 flex flex-col font-sans text-slate-800 bg-slate-50">
+      {/* Header */}
+      <header className="bg-slate-900 text-white shadow-md border-b border-indigo-500 py-5 px-6 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-indigo-600 p-2.5 rounded-lg text-white shadow-md shadow-indigo-500/20">
+              <Award className="w-7 h-7" />
+            </div>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold tracking-tight flex items-center gap-2">
+                Overleaf <span className="text-indigo-400 font-mono">LaTeX</span> Académico
+              </h1>
+              <p className="text-xs text-slate-400">Guía interactiva y generador de plantillas para Monografías</p>
+            </div>
+          </div>
+          
+          <nav className="flex flex-wrap bg-slate-800 p-1.5 rounded-lg border border-slate-700">
+            <button 
+              onClick={() => setActiveTab('intro')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activeTab === 'intro' ? 'bg-indigo-600 text-white shadow' : 'text-slate-300 hover:text-white'}`}
+            >
+              Guía de Inicio
+            </button>
+            <button 
+              onClick={() => setActiveTab('anatomy')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activeTab === 'anatomy' ? 'bg-indigo-600 text-white shadow' : 'text-slate-300 hover:text-white'}`}
+            >
+              Anatomía del Código
+            </button>
+            <button 
+              onClick={() => setActiveTab('generator')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activeTab === 'generator' ? 'bg-indigo-600 text-white shadow' : 'text-slate-300 hover:text-white'}`}
+            >
+              Generador de Plantilla
+            </button>
+            <button 
+              onClick={() => setActiveTab('quiz')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activeTab === 'quiz' ? 'bg-indigo-600 text-white shadow' : 'text-slate-300 hover:text-white'}`}
+            >
+              Evaluación & Checklist
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Main Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8">
+        
+        {/* TAB 1: INTRODUCTION AND INTERFACE GUIDE */}
+        {activeTab === 'intro' && (
+          <div className="space-y-8 animate-fadeIn">
+            {/* Banner */}
+            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+              <div className="relative z-10 max-w-3xl">
+                <span className="bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                  Guía Académica
+                </span>
+                <h2 className="text-3xl md:text-4xl font-extrabold mt-4 mb-3 tracking-tight">
+                  Aprende LaTeX para crear tu Monografía como un Profesional
+                </h2>
+                <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-6">
+                  ¿Cansado de que Word desconfigure tus tablas, desplace tus imágenes misteriosamente o arruine la numeración de tus páginas? 
+                  <strong> LaTeX</strong> te ofrece un formato impecable, automatización de índices y un sistema de citación insuperable mediante <strong>Overleaf</strong>.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <button 
+                    onClick={() => setActiveTab('anatomy')}
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-colors shadow-lg shadow-indigo-600/20 flex items-center gap-2"
+                  >
+                    Explorar el Editor de Código <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <a 
+                    href="https://www.overleaf.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-5 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2"
+                  >
+                    Ir a Overleaf <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Overleaf Interface Tour */}
+            <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <Layout className="text-indigo-600 w-6 h-6" />
+                Conoce la Interfaz de Overleaf
+              </h3>
+              <p className="text-slate-600 mb-6">
+                Overleaf es un editor de LaTeX en la nube cooperativo. No requieres instalar nada en tu computadora. Cuando creas un proyecto, verás la pantalla dividida principalmente en tres grandes columnas esenciales:
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:shadow-md transition-all">
+                  <div className="bg-blue-100 text-blue-700 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
+                    1
+                  </div>
+                  <h4 className="font-bold text-slate-900 mb-2">Panel de Archivos (Izquierda)</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Aquí administras todos los recursos de tu monografía: tu código principal (<code className="bg-slate-200 px-1 py-0.5 rounded text-indigo-700 font-mono">main.tex</code>), imágenes subidas (ej. logos, diagramas) y tu base de datos de referencias bibliográficas (<code className="bg-slate-200 px-1 py-0.5 rounded text-indigo-700 font-mono">referencias.bib</code>).
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:shadow-md transition-all">
+                  <div className="bg-indigo-100 text-indigo-700 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
+                    2
+                  </div>
+                  <h4 className="font-bold text-slate-900 mb-2">Editor de Código (Centro)</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Es el lienzo de desarrollo donde redactas el texto y aplicas los comandos de formato de LaTeX. Overleaf provee resaltado de sintaxis, autocompletado inteligente de comandos y un corrector ortográfico automático.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:shadow-md transition-all">
+                  <div className="bg-emerald-100 text-emerald-700 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg mb-4">
+                    3
+                  </div>
+                  <h4 className="font-bold text-slate-900 mb-2">Previsualización PDF (Derecha)</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Al presionar el gran botón verde <strong>"Recompile"</strong> (Recompilar), LaTeX lee tu código e instrucciones del editor y en segundos renderiza en PDF el aspecto final exacto y perfectamente formateado de tu monografía.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* LaTeX Basic Workflow for Monograph */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Conceptos Importantes */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <Info className="text-amber-500 w-5 h-5" />
+                    Conceptos clave para tu Monografía
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex gap-3">
+                      <div className="mt-1 flex-shrink-0 text-indigo-600 font-mono font-bold">\</div>
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900">¿Qué es un Comando de LaTeX?</h4>
+                        <p className="text-xs text-slate-600">
+                          Todo comando inicia con una barra invertida <code className="text-pink-600 font-mono">\</code> seguido del nombre del comando. Si requiere parámetros adicionales obligatorios, se encierran entre llaves <code className="text-pink-600 font-mono">{"{ }"}</code> y los opcionales entre corchetes <code className="text-pink-600 font-mono">{"[ ]"}</code>.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <div className="mt-1 flex-shrink-0 text-indigo-600 font-mono font-bold">P</div>
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900">El Preámbulo (Configuración)</h4>
+                        <p className="text-xs text-slate-600">
+                          Es la sección del código que va desde el inicio hasta antes de <code className="text-indigo-600 font-mono">\begin{"{document}"}</code>. Aquí se define el tamaño del papel, márgenes, idiomas y se cargan paquetes adicionales. No produce texto visible.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <div className="mt-1 flex-shrink-0 text-indigo-600 font-mono font-bold">C</div>
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900">El Cuerpo del Documento</h4>
+                        <p className="text-xs text-slate-600">
+                          Todo lo que escribas dentro de <code className="text-indigo-600 font-mono">\begin{"{document}"}</code> y <code className="text-indigo-600 font-mono">\end{"{document}"}</code> formará parte del contenido visible de tu monografía (capítulos, portada, bibliografía).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 bg-slate-50 p-4 rounded-xl">
+                  <h4 className="text-xs font-bold text-slate-800 mb-1 flex items-center gap-1">
+                    <Sparkles className="w-4 h-4 text-indigo-500" />
+                    ¿Sabías qué?
+                  </h4>
+                  <p className="text-xs text-slate-600">
+                    Al compilar, LaTeX maneja de forma óptima la tipografía. Detecta problemas de espaciado o desbordamientos de texto en los límites del margen y te avisa mediante el visor de errores de Overleaf.
+                  </p>
+                </div>
+              </div>
+
+              {/* El por qué usarlo en Monografías */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <BookOpenCheck className="text-indigo-600 w-5 h-5" />
+                  Ventajas Directas en Monografías
+                </h3>
+                <div className="space-y-4 text-slate-600 text-sm">
+                  <p>
+                    Una monografía suele demandar un estándar académico riguroso en formato (márgenes APA, fuentes, numeración). He aquí por qué LaTeX te ahorrará noches enteras de formateo manual:
+                  </p>
+                  
+                  <ul className="space-y-3 pl-2">
+                    <li className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2"></div>
+                      <div>
+                        <strong className="text-slate-900">Referencias sin Estrés:</strong> 
+                        <span> Al citar autores usando <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-mono">\cite{"{autor_clave}"}</code>, LaTeX asocia, ordena y genera tu bibliografía final en el formato exacto requerido, de forma automatizada.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2"></div>
+                      <div>
+                        <strong className="text-slate-900">Índices Dinámicos:</strong> 
+                        <span> Con solo un comando, LaTeX calcula e imprime el índice general, de tablas o figuras con las páginas correctas actualizadas.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2"></div>
+                      <div>
+                        <strong className="text-slate-900">Enfoque en el Contenido:</strong> 
+                        <span> Te olvidas de la tipografía, alineación o saltos de página accidentales. Tú escribes; LaTeX formatea.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2"></div>
+                      <div>
+                        <strong className="text-slate-900">Matemáticas Impecables:</strong> 
+                        <span> Si tu monografía tiene ecuaciones, LaTeX es el estándar mundial absoluto por la elegancia y pulcritud de sus motores de fórmulas matemáticas.</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: ANATOMY OF CODE / INTERACTIVE CODE VIEWER */}
+        {activeTab === 'anatomy' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Visor de Código LaTeX Interactivo</h3>
+              <p className="text-slate-600 text-sm mb-6">
+                Haz clic en cualquiera de las líneas resaltadas en el código de la izquierda para ver su función detallada y cómo repercute en la maquetación final de tu monografía a la derecha.
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Editor Panel (Simulated) */}
+                <div className="lg:col-span-7 bg-slate-900 text-slate-300 rounded-xl overflow-hidden border border-slate-800 shadow-md">
+                  <div className="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800">
+                    <span className="text-xs font-mono text-slate-400">main.tex (LaTeX Editor)</span>
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 font-mono text-xs overflow-x-auto space-y-1 select-none leading-relaxed">
+                    <div className="text-slate-500">% Preámbulo de Configuración</div>
+                    
+                    <div 
+                      onClick={() => setSelectedCodeLine(1)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 1 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \documentclass[12pt, a4paper]&#123;article&#125;
+                    </div>
+
+                    <div className="text-indigo-400">\usepackage[utf8]&#123;inputenc&#125;</div>
+                    
+                    <div 
+                      onClick={() => setSelectedCodeLine(2)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 2 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \usepackage[spanish]&#123;babel&#125;
+                    </div>
+
+                    <div 
+                      onClick={() => setSelectedCodeLine(3)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 3 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \usepackage&#123;geometry&#125; \geometry&#123;top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm&#125;
+                    </div>
+
+                    <div className="text-indigo-400">\usepackage&#123;graphicx&#125;</div>
+                    <div className="text-indigo-400">\usepackage&#123;booktabs&#125;</div>
+                    
+                    <div className="text-slate-500">\vspace{1.5} % Inicio del Documento</div>
+                    <div className="text-indigo-400">\begin&#123;document&#125;</div>
+                    
+                    <div 
+                      onClick={() => setSelectedCodeLine(4)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 4 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \begin&#123;titlepage&#125; [Código de Portada...] \end&#123;titlepage&#125;
+                    </div>
+
+                    <div 
+                      onClick={() => setSelectedCodeLine(5)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 5 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \tableofcontents
+                    </div>
+
+                    <div className="text-slate-500">\newpage</div>
+                    <div className="text-green-400">\section&#123;Introducción&#125;</div>
+                    <div className="text-slate-400">Este es el inicio de la investigación...</div>
+                    
+                    <div 
+                      onClick={() => setSelectedCodeLine(6)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 6 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \begin&#123;figure&#125; \centering [Detalle Imagen...] \caption&#123;Grafico&#125; \end&#123;figure&#125;
+                    </div>
+
+                    <div 
+                      onClick={() => setSelectedCodeLine(7)}
+                      className={`cursor-pointer p-1.5 rounded transition-all ${selectedCodeLine === 7 ? 'bg-indigo-950 text-indigo-200 border-l-4 border-indigo-500 font-bold' : 'hover:bg-slate-800 text-indigo-400'}`}
+                    >
+                      \begin&#123;thebibliography&#125;&#123;99&#125; [Referencias...] \end&#123;thebibliography&#125;
+                    </div>
+
+                    <div className="text-indigo-400">\end&#123;document&#125;</div>
+                  </div>
+                </div>
+
+                {/* Info Panel / Render Panel */}
+                <div className="lg:col-span-5 flex flex-col gap-4">
+                  {selectedCodeLine ? (
+                    <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-5 shadow-sm animate-fadeIn">
+                      <span className="text-xs font-bold text-indigo-600 tracking-wider uppercase">Explicación Técnica</span>
+                      <h4 className="text-lg font-bold text-slate-900 mt-1 mb-2">
+                        {interactiveCodeSegments.find(s => s.id === selectedCodeLine)?.label}
+                      </h4>
+                      <p className="text-xs text-slate-700 leading-relaxed mb-3 font-mono bg-white p-2.5 rounded border border-indigo-100">
+                        {interactiveCodeSegments.find(s => s.id === selectedCodeLine)?.line}
+                      </p>
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        {interactiveCodeSegments.find(s => s.id === selectedCodeLine)?.desc}
+                      </p>
+                      <button 
+                        onClick={() => setSelectedCodeLine(null)} 
+                        className="text-xs text-indigo-600 font-bold hover:underline mt-4 flex items-center gap-1"
+                      >
+                        <ChevronLeft className="w-3 h-3" /> Cerrar explicación
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-center items-center text-center py-12">
+                      <Code className="w-12 h-12 text-slate-400 mb-3" />
+                      <h4 className="font-bold text-slate-900 mb-1">Explorador Desactivado</h4>
+                      <p className="text-xs text-slate-500 max-w-[250px]">
+                        Haz clic en una de las líneas coloreadas en azul/morado a la izquierda para ver su función técnica.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Simulated PDF Output Visualizer */}
+                  <div className="bg-white border border-slate-300 rounded-xl shadow-md p-6 min-h-[250px] relative">
+                    <span className="absolute top-2 right-2 text-[10px] uppercase font-bold text-slate-400 tracking-widest border border-slate-200 px-1.5 py-0.5 rounded">
+                      PDF Simulado
+                    </span>
+                    <div className="border-b border-slate-200 pb-3 mb-4">
+                      <div className="text-[10px] text-slate-400 font-serif">MONOGRAFÍA ACADÉMICA</div>
+                    </div>
+                    
+                    {/* Simulated Content Dynamic based on Selection */}
+                    <div className="space-y-3 font-serif">
+                      {selectedCodeLine === 1 && (
+                        <div className="animate-fadeIn">
+                          <h5 className="text-sm font-bold text-slate-900 mb-1">Estructura Global [article]</h5>
+                          <p className="text-[11px] text-slate-600 leading-relaxed">
+                            Formato de documento estándar para artículos académicos o monografías cortas. Todo el espaciado, márgenes simétricos y estilo tipográfico estándar se inicializan aquí bajo este parámetro universal.
+                          </p>
+                        </div>
+                      )}
+                      
+                      {selectedCodeLine === 2 && (
+                        <div className="animate-fadeIn">
+                          <h5 className="text-sm font-bold text-slate-900 mb-1">Traducción de Etiquetas automáticas</h5>
+                          <div className="bg-slate-50 p-2 rounded text-left mb-2 text-[11px]">
+                            <span className="font-bold text-slate-800">Resultado con Babel (Español):</span> <span className="text-indigo-600">Índice general</span>, <span className="text-indigo-600">Referencias</span>.<br/>
+                            <span className="font-bold text-slate-400">Resultado sin Babel:</span> <span className="text-slate-400">Contents</span>, <span className="text-slate-400">References</span>.
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedCodeLine === 3 && (
+                        <div className="animate-fadeIn text-center border-2 border-dashed border-indigo-200 p-3 rounded">
+                          <span className="text-[10px] font-mono text-indigo-500">Esquema de Márgenes (Geometry)</span>
+                          <div className="grid grid-cols-3 gap-1 mt-2 text-[9px] text-slate-600">
+                            <div>Izquierdo: 3cm</div>
+                            <div>Superior: 2.5cm</div>
+                            <div>Derecho: 2.5cm</div>
+                          </div>
+                          <p className="text-[10px] text-slate-400 mt-1">Especial para permitir el anillado o empastado de tu documento final.</p>
+                        </div>
+                      )}
+
+                      {selectedCodeLine === 4 && (
+                        <div className="animate-fadeIn text-center py-4 border border-slate-100 bg-slate-50 rounded">
+                          <h4 className="text-[11px] uppercase tracking-wider font-bold text-slate-800">UNIVERSIDAD DE INVESTIGACIÓN</h4>
+                          <div className="w-8 h-8 bg-slate-300 mx-auto my-2 rounded-full flex items-center justify-center text-[8px] text-slate-600">[Escudo]</div>
+                          <h5 className="text-[13px] font-bold text-slate-950 px-3">Estudio Crítico sobre la Inteligencia Artificial</h5>
+                          <div className="text-[9px] text-slate-500 mt-3">Por: Sofía Ramos Pérez</div>
+                        </div>
+                      )}
+
+                      {selectedCodeLine === 5 && (
+                        <div className="animate-fadeIn space-y-1">
+                          <h4 className="text-xs font-bold text-slate-900">ÍNDICE GENERAL</h4>
+                          <div className="border-b border-dotted border-slate-300 flex justify-between text-[11px] text-slate-600">
+                            <span>1. Introducción</span><span>1</span>
+                          </div>
+                          <div className="border-b border-dotted border-slate-300 flex justify-between text-[11px] text-slate-600">
+                            <span>2. Marco Teórico</span><span>3</span>
+                          </div>
+                          <div className="border-b border-dotted border-slate-300 flex justify-between text-[11px] text-slate-600">
+                            <span>3. Análisis de Datos</span><span>8</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedCodeLine === 6 && (
+                        <div className="animate-fadeIn text-center border border-slate-200 p-2 rounded bg-slate-50">
+                          <div className="w-24 h-16 bg-slate-200 border border-slate-300 mx-auto flex items-center justify-center text-[10px] text-slate-500">[Gráfico Científico]</div>
+                          <p className="text-[9px] text-slate-600 mt-1.5 italic">Figura 1: Diagrama conceptual de la metodología experimental.</p>
+                        </div>
+                      )}
+
+                      {selectedCodeLine === 7 && (
+                        <div className="animate-fadeIn space-y-2">
+                          <h4 className="text-xs font-bold text-slate-900">REFERENCIAS</h4>
+                          <p className="text-[9px] text-slate-600 leading-relaxed pl-3 -indent-3">
+                            [1] García, J., & Martínez, L. (2025). <span className="italic">La Inteligencia Artificial en el Aprendizaje Personalizado</span>. Journal of Educational Technology, 45(2), 112-128.
+                          </p>
+                        </div>
+                      )}
+
+                      {!selectedCodeLine && (
+                        <div className="text-center py-6 text-slate-400">
+                          <BookOpen className="w-10 h-10 mx-auto mb-2 opacity-30" />
+                          <p className="text-[11px] italic">Aquí aparecerá la representación visual de tu código una vez elijas una sección interactiva.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: TEMPLATE GENERATOR */}
+        {activeTab === 'generator' && (
+          <div className="space-y-6 animate-fadeIn">
+            {/* Form & Code Output Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              {/* Form Configurator */}
+              <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-5">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <Sparkles className="text-indigo-600 w-5 h-5" />
+                    Diseña tu Monografía
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Completa la información institucional de tu proyecto para autogenerar una plantilla LaTeX lista para copiar en Overleaf.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Universidad o Institución</label>
+                    <input 
+                      type="text" 
+                      name="university"
+                      value={templateConfig.university}
+                      onChange={handleTemplateChange}
+                      className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Facultad o Departamento</label>
+                    <input 
+                      type="text" 
+                      name="faculty"
+                      value={templateConfig.faculty}
+                      onChange={handleTemplateChange}
+                      className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Título de la Monografía</label>
+                    <input 
+                      type="text" 
+                      name="title"
+                      value={templateConfig.title}
+                      onChange={handleTemplateChange}
+                      className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-900"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Subtítulo o Enfoque</label>
+                    <input 
+                      type="text" 
+                      name="subtitle"
+                      value={templateConfig.subtitle}
+                      onChange={handleTemplateChange}
+                      className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tu Nombre (Autor)</label>
+                      <input 
+                        type="text" 
+                        name="author"
+                        value={templateConfig.author}
+                        onChange={handleTemplateChange}
+                        className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tu Asesor Académico</label>
+                      <input 
+                        type="text" 
+                        name="advisor"
+                        value={templateConfig.advisor}
+                        onChange={handleTemplateChange}
+                        className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ciudad / Sede</label>
+                      <input 
+                        type="text" 
+                        name="city"
+                        value={templateConfig.city}
+                        onChange={handleTemplateChange}
+                        className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Año de Publicación</label>
+                      <input 
+                        type="text" 
+                        name="year"
+                        value={templateConfig.year}
+                        onChange={handleTemplateChange}
+                        className="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Chapters Dynamic Management */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-xs font-bold uppercase text-slate-600">Capítulos de la Monografía</label>
+                      {templateConfig.chapters.length < 8 && (
+                        <button 
+                          onClick={addChapterField} 
+                          className="text-[11px] text-indigo-600 hover:text-indigo-800 font-bold"
+                        >
+                          + Agregar Sección
+                        </button>
+                      )}
+                    </div>
+                    <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                      {templateConfig.chapters.map((chap, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <span className="text-xs text-slate-400 w-5 text-right">{index + 1}.</span>
+                          <input 
+                            type="text" 
+                            value={chap}
+                            onChange={(e) => handleChapterChange(index, e.target.value)}
+                            className="flex-1 px-3 py-1.5 border border-slate-200 rounded-md text-xs focus:ring-1 focus:ring-indigo-500 outline-none"
+                          />
+                          {templateConfig.chapters.length > 2 && (
+                            <button 
+                              onClick={() => removeChapterField(index)}
+                              className="text-red-500 hover:text-red-700 font-bold text-xs px-1"
+                              title="Eliminar este capítulo"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Code Output Visualizer */}
+              <div className="lg:col-span-7 bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg flex flex-col min-h-[500px]">
+                <div className="bg-slate-950 px-5 py-3.5 flex justify-between items-center border-b border-slate-800">
+                  <div>
+                    <span className="text-xs font-bold text-slate-400 block uppercase tracking-wider">Plantilla Autogenerada</span>
+                    <span className="text-xs font-mono text-indigo-400">monografia_base.tex</span>
+                  </div>
+                  <button 
+                    onClick={copyToClipboard}
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-2 transition-all shadow-md shadow-indigo-600/10"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4 text-emerald-300" /> ¡Código Copiado!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" /> Copiar Código LaTeX
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex-1 p-5 font-mono text-xs text-slate-300 overflow-y-auto max-h-[550px] leading-relaxed">
+                  <pre className="whitespace-pre-wrap">{generateLaTeXCode()}</pre>
+                </div>
+                
+                <div className="bg-slate-950 px-5 py-4 border-t border-slate-800 text-slate-400 text-xs flex items-center gap-2.5">
+                  <Play className="w-4 h-4 text-indigo-400" />
+                  <span><strong>¿Qué hacer ahora?</strong> Abre Overleaf, crea un proyecto vacío, borra todo en <code className="bg-slate-900 p-0.5 rounded text-white font-mono">main.tex</code>, pega este código autogenerado y dale a "Recompile".</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: QUIZ AND CHECKLIST */}
+        {activeTab === 'quiz' && (
+          <div className="space-y-8 animate-fadeIn">
+            {/* Interactive Checklist to Track Progress */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <h3 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                <CheckSquare className="text-emerald-500 w-6 h-6" />
+                Tu Ruta de Trabajo para la Monografía
+              </h3>
+              <p className="text-slate-600 text-sm mb-6">
+                Organiza tus pasos antes y durante el desarrollo de tu monografía en LaTeX. Marca tus hitos y mantente motivado en tu investigación:
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {checklist.map(item => (
+                  <div 
+                    key={item.id}
+                    onClick={() => toggleChecklist(item.id)}
+                    className={`p-4 rounded-xl border cursor-pointer flex items-center gap-4 transition-all ${
+                      item.completed 
+                        ? 'bg-emerald-50/50 border-emerald-200 text-slate-700' 
+                        : 'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-600'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded flex items-center justify-center transition-all ${
+                      item.completed 
+                        ? 'bg-emerald-600 text-white' 
+                        : 'border border-slate-400 bg-white'
+                    }`}>
+                      {item.completed && <Check className="w-3.5 h-3.5" />}
+                    </div>
+                    <span className={`text-sm ${item.completed ? 'line-through text-slate-400' : 'font-medium'}`}>
+                      {item.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Assessment / Quiz Section */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                  <HelpCircle className="text-indigo-600 w-6 h-6" />
+                  Pon a prueba lo aprendido
+                </h3>
+                <p className="text-slate-600 text-sm mt-1">
+                  Responde estas breves preguntas antes de embarcarte en tu monografía para certificar tus conocimientos de LaTeX.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                {quizQuestions.map((q, idx) => (
+                  <div key={q.id} className="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
+                    <h4 className="font-bold text-slate-900 text-sm md:text-base mb-3">
+                      {idx + 1}. {q.q}
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {q.options.map(opt => {
+                        const isSelected = quizAnswers[q.id] === opt.key;
+                        const isCorrect = opt.key === q.correct;
+                        
+                        let optionStyle = "border-slate-200 hover:bg-slate-50";
+                        if (quizSubmitted) {
+                          if (isCorrect) {
+                            optionStyle = "bg-emerald-50 border-emerald-300 text-emerald-800 font-semibold";
+                          } else if (isSelected) {
+                            optionStyle = "bg-red-50 border-red-300 text-red-800 font-semibold";
+                          } else {
+                            optionStyle = "border-slate-100 opacity-60";
+                          }
+                        } else if (isSelected) {
+                          optionStyle = "border-indigo-500 bg-indigo-50/50 text-indigo-950 font-semibold";
+                        }
+
+                        return (
+                          <button
+                            key={opt.key}
+                            disabled={quizSubmitted}
+                            onClick={() => handleQuizAnswer(q.id, opt.key)}
+                            className={`p-3 rounded-lg border text-left text-xs transition-all flex items-center gap-2.5 ${optionStyle}`}
+                          >
+                            <span className="bg-slate-200 w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] text-slate-700 shrink-0">
+                              {opt.key}
+                            </span>
+                            <span>{opt.text}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {quizSubmitted && (
+                      <div className="mt-3 p-3 rounded-lg bg-indigo-50/60 border border-indigo-100 text-xs text-indigo-900 leading-relaxed">
+                        <strong>Explicación:</strong> {q.explanation}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 pt-5 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                {!quizSubmitted ? (
+                  <button
+                    onClick={submitQuiz}
+                    disabled={Object.keys(quizAnswers).length < quizQuestions.length}
+                    className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-bold px-6 py-3 rounded-lg text-sm transition-all shadow-md shadow-indigo-600/10"
+                  >
+                    Calificar mi Cuestionario
+                  </button>
+                ) : (
+                  <div className="flex flex-col md:flex-row items-center gap-4 w-full justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2.5 rounded-lg font-bold text-lg ${score >= 70 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                        {score} / 100 Puntos
+                      </div>
+                      <p className="text-xs text-slate-600">
+                        {score >= 70 
+                          ? '¡Excelente! Estás más que listo para comenzar a estructurar tu monografía en Overleaf.' 
+                          : 'Te recomendamos repasar el preámbulo y la estructura básica antes de codificar.'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={resetQuiz}
+                      className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-5 py-2.5 rounded-lg text-xs transition-colors"
+                    >
+                      Intentar Nuevamente
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-slate-400 text-xs py-8 px-6 border-t border-slate-800 mt-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-center md:text-left">
+            <p className="font-bold text-slate-200 mb-1">Overleaf LaTeX Académico v1.0</p>
+            <p>Guía de autoaprendizaje interactivo para estudiantes e investigadores.</p>
+          </div>
+          <div className="flex gap-4">
+            <a 
+              href="https://es.overleaf.com/learn" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="hover:text-indigo-400 underline transition-colors flex items-center gap-1"
+            >
+              Documentación Oficial <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

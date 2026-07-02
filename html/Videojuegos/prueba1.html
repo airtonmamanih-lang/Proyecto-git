@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHADOW CLASH — Videojuego de Peleas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  #game-container {
+    width: 900px;
+    max-width: 100vw;
+    position: relative;
+  }
+
+  #header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 6px;
+  }
+
+  .player-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+  #p1-name { color: #f43b47; }
+  #p2-name { color: #3b8bf4; text-align: right; }
+
+  #title-logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: #e0c050;
+    text-shadow: 0 0 20px #e0c05088;
+  }
+
+  #hp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .hp-bar-wrap {
+    flex: 1;
+    height: 22px;
+    background: #1a1a2a;
+    border: 2px solid #333;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #hp1-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #f43b47, #ff8c42);
+    transition: width 0.12s ease;
+    float: right;
+  }
+
+  #hp2-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b8bf4, #42c5ff);
+    transition: width 0.12s ease;
+  }
+
+  #timer-box {
+    width: 52px;
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 34px;
+    color: #fff;
+    line-height: 1;
+    background: #1a1a2a;
+    border: 2px solid #444;
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+
+  #status-bar {
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  #round-label { color: #e0c050; }
+
+  #game-canvas {
+    display: block;
+    border: 2px solid #222;
+    border-radius: 4px;
+    background: #000;
+    image-rendering: pixelated;
+  }
+
+  #controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 4px 0;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .ctrl-block { display: flex; flex-direction: column; gap: 2px; }
+  .ctrl-block span { font-size: 12px; }
+  kbd {
+    background: #1a1a2a;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-family: 'Rajdhani', monospace;
+    font-size: 11px;
+    color: #aaa;
+  }
+
+  #overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.82);
+    border-radius: 4px;
+    z-index: 10;
+  }
+
+  #overlay-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 64px;
+    letter-spacing: 10px;
+    color: #e0c050;
+    text-shadow: 0 0 30px #e0c050aa;
+    margin-bottom: 8px;
+  }
+
+  #overlay-sub {
+    font-size: 18px;
+    color: #aaa;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+  }
+
+  #start-btn {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: #0a0a0f;
+    background: #e0c050;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 40px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 0 24px #e0c05066;
+  }
+  #start-btn:hover { transform: scale(1.06); box-shadow: 0 0 36px #e0c050aa; }
+
+  #winner-msg {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+    letter-spacing: 6px;
+    margin-bottom: 6px;
+  }
+
+  .combo-flash {
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 3px;
+    pointer-events: none;
+    animation: comboFade 0.7s forwards;
+    z-index: 20;
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  @keyframes comboFade {
+    0%   { opacity: 1; transform: scale(1.2) translateY(0); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="game-container">
+  <div id="header">
+    <div id="p1-name">KAGE</div>
+    <div id="title-logo">SHADOW CLASH</div>
+    <div id="p2-name">BLAZE</div>
+  </div>
+
+  <div id="hp-row">
+    <div class="hp-bar-wrap" style="direction:rtl">
+      <div id="hp1-bar" style="width:100%; float:none;"></div>
+    </div>
+    <div id="timer-box">99</div>
+    <div class="hp-bar-wrap">
+      <div id="hp2-bar" style="width:100%"></div>
+    </div>
+  </div>
+
+  <div id="status-bar">
+    <span id="round-label">ROUND 1</span> &nbsp;|&nbsp;
+    <span id="score-label">KAGE 0 — 0 BLAZE</span>
+  </div>
+
+  <canvas id="game-canvas" width="900" height="400"></canvas>
+
+  <div id="controls">
+    <div class="ctrl-block">
+      <span>KAGE — <kbd>A</kbd><kbd>D</kbd> mover &nbsp; <kbd>W</kbd> saltar</span>
+      <span><kbd>F</kbd> golpe &nbsp; <kbd>G</kbd> patada &nbsp; <kbd>H</kbd> especial</span>
+    </div>
+    <div class="ctrl-block" style="text-align:right">
+      <span>BLAZE — <kbd>←</kbd><kbd>→</kbd> mover &nbsp; <kbd>↑</kbd> saltar</span>
+      <span><kbd>1</kbd> golpe &nbsp; <kbd>2</kbd> patada &nbsp; <kbd>3</kbd> especial</span>
+    </div>
+  </div>
+
+  <div id="overlay" style="border-radius:4px; top:42px;">
+    <div id="overlay-title">SHADOW<br>CLASH</div>
+    <div id="overlay-sub">JUEGO DE PELEAS 2D</div>
+    <button id="start-btn" onclick="startGame()">▶ INICIAR</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const FLOOR = H - 70;
+
+const P1_COLOR = '#f43b47';
+const P2_COLOR = '#3b8bf4';
+const P1_GLOW  = '#ff8c42';
+const P2_GLOW  = '#42c5ff';
+
+let gameRunning = false;
+let roundTimer = 99;
+let timerInterval;
+let score = [0, 0];
+let round = 1;
+let animFrameId;
+
+const keys = {};
+document.addEventListener('keydown', e => { keys[e.code] = true; e.preventDefault(); });
+document.addEventListener('keyup',  e => { keys[e.code] = false; });
+
+class Fighter {
+  constructor(x, facing, color, glow, name, isP1) {
+    this.x = x; this.y = FLOOR;
+    this.vx = 0; this.vy = 0;
+    this.onGround = true;
+    this.color = color; this.glow = glow; this.name = name;
+    this.facing = facing;
+    this.hp = 100; this.maxHp = 100;
+    this.isP1 = isP1;
+    this.w = 44; this.h = 80;
+    this.attackCooldown = 0;
+    this.hurtTimer = 0;
+    this.specialCooldown = 0;
+    this.comboCount = 0;
+    this.comboTimer = 0;
+    this.state = 'idle';
+    this.stateTimer = 0;
+    this.particles = [];
+    this.frameAnim = 0;
+  }
+
+  applyGravity() {
+    if (!this.onGround) this.vy += 0.9;
+    this.y += this.vy;
+    if (this.y >= FLOOR) {
+      this.y = FLOOR; this.vy = 0; this.onGround = true;
+      if (this.state === 'jump') this.state = 'idle';
+    }
+  }
+
+  move() {
+    this.x += this.vx;
+    if (this.x < 20) this.x = 20;
+    if (this.x > W - 20 - this.w) this.x = W - 20 - this.w;
+  }
+
+  update() {
+    this.frameAnim = (this.frameAnim + 0.15) % 4;
+    if (this.attackCooldown > 0) this.attackCooldown--;
+    if (this.specialCooldown > 0) this.specialCooldown--;
+    if (this.hurtTimer > 0) { this.hurtTimer--; this.state = 'hurt'; }
+    if (this.stateTimer > 0) { this.stateTimer--; }
+    else if (this.state === 'attack' || this.state === 'special') this.state = 'idle';
+    if (this.hurtTimer === 0 && this.state === 'hurt') this.state = 'idle';
+    if (this.comboTimer > 0) this.comboTimer--;
+    else this.comboCount = 0;
+    this.particles = this.particles.filter(p => p.life > 0);
+    this.particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--;
+    });
+  }
+
+  spawnHitParticles(atX, atY, color) {
+    for (let i = 0; i < 12; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1.5 + Math.random() * 3;
+      this.particles.push({
+        x: atX, y: atY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        life: 18 + Math.random() * 10,
+        color, size: 2 + Math.random() * 3
+      });
+    }
+  }
+
+  draw() {
+    const px = this.x, py = this.y - this.h;
+    const f = this.facing;
+    const bob = this.state === 'idle' ? Math.sin(this.frameAnim * Math.PI * 2) * 2 : 0;
+    const runOff = this.state === 'run' ? Math.sin(this.frameAnim * Math.PI * 2) * 3 : 0;
+    ctx.save();
+    if (this.state === 'special') { ctx.shadowColor = this.glow; ctx.shadowBlur = 30; }
+    else if (this.hurtTimer > 0) { ctx.shadowColor = '#fff'; ctx.shadowBlur = 16; }
+    const bodyY = py + bob + runOff;
+    const drawColor = (this.hurtTimer > 0 && Math.floor(this.hurtTimer / 3) % 2 === 0) ? '#fff' : this.color;
+
+    ctx.fillStyle = drawColor;
+    ctx.beginPath(); ctx.roundRect(px + 6, bodyY + 16, 32, 48, 5); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(px + 22, bodyY + 10, 14, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = this.state === 'special' ? this.glow : '#fff';
+    const eyeX = f === 1 ? px + 26 : px + 14;
+    ctx.beginPath(); ctx.arc(eyeX, bodyY + 8, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(eyeX + f * 1.5, bodyY + 8.5, 2, 0, Math.PI * 2); ctx.fill();
+
+    ctx.strokeStyle = drawColor; ctx.lineWidth = 8; ctx.lineCap = 'round';
+    if (this.state === 'attack') {
+      ctx.beginPath(); ctx.moveTo(px + 22, bodyY + 28); ctx.lineTo(px + 22 + f * 50, bodyY + 22); ctx.stroke();
+      ctx.fillStyle = this.glow;
+      ctx.beginPath(); ctx.arc(px + 22 + f * 52, bodyY + 22, 8, 0, Math.PI * 2); ctx.fill();
+    } else if (this.state === 'special') {
+      ctx.beginPath(); ctx.moveTo(px + 14, bodyY + 28); ctx.lineTo(px - 10, bodyY + 5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px + 30, bodyY + 28); ctx.lineTo(px + 54, bodyY + 5); ctx.stroke();
+    } else {
+      const armSwing = this.state === 'run' ? Math.sin(this.frameAnim * Math.PI * 2) * 12 : 0;
+      ctx.beginPath(); ctx.moveTo(px + 12, bodyY + 26); ctx.lineTo(px - 2 + armSwing, bodyY + 48); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px + 32, bodyY + 26); ctx.lineTo(px + 46 - armSwing, bodyY + 48); ctx.stroke();
+    }
+
+    ctx.lineWidth = 10;
+    if (this.onGround) {
+      const legSwing = this.state === 'run' ? Math.sin(this.frameAnim * Math.PI * 2) * 14 : 0;
+      if (this.state === 'attack') {
+        ctx.beginPath(); ctx.moveTo(px + 16, bodyY + 64); ctx.lineTo(px + 10, bodyY + 86); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(px + 28, bodyY + 64); ctx.lineTo(px + 28 + f * 40, bodyY + 78); ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.moveTo(px + 16, bodyY + 64); ctx.lineTo(px + 10 - legSwing, bodyY + 86); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(px + 28, bodyY + 64); ctx.lineTo(px + 34 + legSwing, bodyY + 86); ctx.stroke();
+      }
+    } else {
+      ctx.beginPath(); ctx.moveTo(px + 16, bodyY + 64); ctx.lineTo(px + 6, bodyY + 80); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px + 28, bodyY + 64); ctx.lineTo(px + 38, bodyY + 80); ctx.stroke();
+    }
+    ctx.restore();
+
+    this.particles.forEach(p => {
+      ctx.globalAlpha = p.life / 28;
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+}
+
+let projectiles = [];
+let p1, p2;
+
+function initFighters() {
+  p1 = new Fighter(130, 1, P1_COLOR, P1_GLOW, 'KAGE', true);
+  p2 = new Fighter(700, -1, P2_COLOR, P2_GLOW, 'BLAZE', false);
+  projectiles = [];
+}
+
+const bgStars = Array.from({length: 60}, () => ({
+  x: Math.random() * W, y: Math.random() * (H - 120),
+  size: Math.random() * 1.5 + 0.3,
+  blink: Math.random() * Math.PI * 2
+}));
+let bgFrame = 0;
+
+function drawBackground() {
+  bgFrame += 0.02;
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#05060f');
+  grad.addColorStop(0.6, '#0d1030');
+  grad.addColorStop(1, '#1a1000');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+
+  bgStars.forEach(s => {
+    s.blink += 0.03;
+    ctx.globalAlpha = 0.4 + 0.4 * Math.sin(s.blink);
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = '#e8d96a'; ctx.shadowColor = '#e8d96a'; ctx.shadowBlur = 40;
+  ctx.beginPath(); ctx.arc(W - 100, 60, 36, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#0d1030';
+  ctx.beginPath(); ctx.arc(W - 88, 52, 30, 0, Math.PI * 2); ctx.fill();
+  ctx.shadowBlur = 0;
+
+  const buildings = [
+    [0,80,60,250],[55,100,80,230],[130,60,50,270],[175,90,70,240],
+    [240,50,55,280],[290,75,90,255],[375,45,65,285],[435,85,75,245],
+    [505,65,55,265],[555,95,80,235],[630,55,60,275],[685,80,70,250],
+    [750,50,55,280],[800,70,90,260],[885,40,60,290]
+  ];
+  ctx.fillStyle = '#060812';
+  buildings.forEach(([x,topY,w,h]) => {
+    ctx.fillRect(x, topY, w, h);
+    for (let wy = topY + 10; wy < FLOOR - 10; wy += 18) {
+      for (let wx = x + 6; wx < x + w - 8; wx += 14) {
+        if (Math.random() > 0.4) {
+          ctx.fillStyle = `rgba(255,230,100,${0.2 + Math.random() * 0.4})`;
+          ctx.fillRect(wx, wy, 7, 9);
+        }
+      }
+    }
+    ctx.fillStyle = '#060812';
+  });
+
+  const groundGrad = ctx.createLinearGradient(0, FLOOR, 0, H);
+  groundGrad.addColorStop(0, '#2a1800'); groundGrad.addColorStop(1, '#0a0800');
+  ctx.fillStyle = groundGrad; ctx.fillRect(0, FLOOR, W, H - FLOOR);
+
+  ctx.strokeStyle = '#e0c050'; ctx.lineWidth = 2;
+  ctx.shadowColor = '#e0c050'; ctx.shadowBlur = 12;
+  ctx.beginPath(); ctx.moveTo(0, FLOOR); ctx.lineTo(W, FLOOR); ctx.stroke();
+  ctx.shadowBlur = 0; ctx.lineWidth = 1;
+}
+
+function hitboxOverlap(attacker, defender, reach = 60) {
+  return Math.abs((attacker.x + 22) - (defender.x + 22)) < reach;
+}
+
+function processAttack(attacker, defender, dmg, reach) {
+  if (attacker.attackCooldown === 0 && hitboxOverlap(attacker, defender, reach)) {
+    defender.hp -= dmg;
+    if (defender.hp < 0) defender.hp = 0;
+    defender.hurtTimer = 18;
+    defender.vx = attacker.facing * 4;
+    attacker.comboTimer = 80; attacker.comboCount++;
+    const hitX = (attacker.x + 22 + defender.x + 22) / 2;
+    const hitY = defender.y - 40;
+    attacker.spawnHitParticles(hitX, hitY, attacker.glow);
+    showCombo(attacker, hitX, hitY);
+    return true;
+  }
+  return false;
+}
+
+function showCombo(fighter, x, y) {
+  const el = document.createElement('div');
+  el.className = 'combo-flash';
+  el.style.color = fighter.color;
+  const labels = ['HIT!','COMBO!','SUPER!','BRUTAL!','PERFECTO!'];
+  el.textContent = labels[Math.min(fighter.comboCount - 1, labels.length - 1)];
+  const rect = canvas.getBoundingClientRect();
+  const cRect = document.getElementById('game-container').getBoundingClientRect();
+  el.style.left = (rect.left - cRect.left + x) + 'px';
+  el.style.top  = (rect.top  - cRect.top  + y - 60) + 'px';
+  document.getElementById('game-container').appendChild(el);
+  setTimeout(() => el.remove(), 700);
+}
+
+function handleInput() {
+  if (p1.hurtTimer === 0 && p1.state !== 'attack' && p1.state !== 'special') {
+    p1.vx = 0;
+    if (keys['KeyA']) { p1.vx = -5; p1.state = 'run'; }
+    if (keys['KeyD']) { p1.vx = 5;  p1.state = 'run'; }
+    if (!keys['KeyA'] && !keys['KeyD'] && p1.state === 'run') p1.state = 'idle';
+    if (keys['KeyW'] && p1.onGround) { p1.vy = -18; p1.onGround = false; p1.state = 'jump'; }
+    if (keys['KeyF'] && p1.attackCooldown === 0) {
+      p1.state = 'attack'; p1.stateTimer = 18; p1.attackCooldown = 28;
+      processAttack(p1, p2, 8, 80);
+    }
+    if (keys['KeyG'] && p1.attackCooldown === 0) {
+      p1.state = 'attack'; p1.stateTimer = 22; p1.attackCooldown = 35;
+      processAttack(p1, p2, 14, 90);
+    }
+    if (keys['KeyH'] && p1.specialCooldown === 0) {
+      p1.state = 'special'; p1.stateTimer = 30; p1.specialCooldown = 90;
+      projectiles.push({ x: p1.x + 22, y: p1.y - 40, vx: 8, owner: p1, color: P1_GLOW, life: 80 });
+    }
+  }
+  if (p2.x > p1.x) p1.facing = 1; else p1.facing = -1;
+
+  if (p2.hurtTimer === 0 && p2.state !== 'attack' && p2.state !== 'special') {
+    p2.vx = 0;
+    if (keys['ArrowLeft'])  { p2.vx = -5; p2.state = 'run'; }
+    if (keys['ArrowRight']) { p2.vx = 5;  p2.state = 'run'; }
+    if (!keys['ArrowLeft'] && !keys['ArrowRight'] && p2.state === 'run') p2.state = 'idle';
+    if (keys['ArrowUp'] && p2.onGround) { p2.vy = -18; p2.onGround = false; p2.state = 'jump'; }
+    if (keys['Digit1'] && p2.attackCooldown === 0) {
+      p2.state = 'attack'; p2.stateTimer = 18; p2.attackCooldown = 28;
+      processAttack(p2, p1, 8, 80);
+    }
+    if (keys['Digit2'] && p2.attackCooldown === 0) {
+      p2.state = 'attack'; p2.stateTimer = 22; p2.attackCooldown = 35;
+      processAttack(p2, p1, 14, 90);
+    }
+    if (keys['Digit3'] && p2.specialCooldown === 0) {
+      p2.state = 'special'; p2.stateTimer = 30; p2.specialCooldown = 90;
+      projectiles.push({ x: p2.x + 22, y: p2.y - 40, vx: -8, owner: p2, color: P2_GLOW, life: 80 });
+    }
+  }
+  if (p1.x > p2.x) p2.facing = 1; else p2.facing = -1;
+}
+
+function updateProjectiles() {
+  projectiles = projectiles.filter(p => p.life > 0);
+  projectiles.forEach(proj => {
+    proj.x += proj.vx; proj.life--;
+    const target = proj.owner === p1 ? p2 : p1;
+    if (Math.abs(proj.x - (target.x + 22)) < 30 && Math.abs(proj.y - (target.y - 40)) < 40) {
+      target.hp -= 20; if (target.hp < 0) target.hp = 0;
+      target.hurtTimer = 22; target.vx = Math.sign(proj.vx) * 5;
+      proj.owner.spawnHitParticles(proj.x, proj.y, proj.color);
+      showCombo(proj.owner, proj.x, proj.y);
+      proj.life = 0;
+    }
+  });
+}
+
+function drawProjectiles() {
+  projectiles.forEach(proj => {
+    ctx.save();
+    ctx.shadowColor = proj.color; ctx.shadowBlur = 20; ctx.fillStyle = proj.color;
+    const dir = proj.vx > 0 ? 1 : -1;
+    ctx.beginPath();
+    ctx.moveTo(proj.x + dir * 18, proj.y);
+    ctx.lineTo(proj.x - dir * 18, proj.y - 7);
+    ctx.lineTo(proj.x - dir * 5, proj.y);
+    ctx.lineTo(proj.x - dir * 18, proj.y + 7);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  });
+}
+
+function updateUI() {
+  document.getElementById('hp1-bar').style.width = p1.hp + '%';
+  document.getElementById('hp2-bar').style.width = p2.hp + '%';
+  document.getElementById('timer-box').textContent = roundTimer;
+  document.getElementById('score-label').textContent = `KAGE ${score[0]} — ${score[1]} BLAZE`;
+}
+
+function endRound(winner) {
+  clearInterval(timerInterval);
+  gameRunning = false;
+  cancelAnimationFrame(animFrameId);
+  let msg, color;
+  if (winner === 'draw') { msg = 'EMPATE'; color = '#e0c050'; }
+  else if (winner === p1) { score[0]++; msg = 'KAGE GANA'; color = P1_GLOW; }
+  else { score[1]++; msg = 'BLAZE GANA'; color = P2_GLOW; }
+  const overlay = document.getElementById('overlay');
+  overlay.innerHTML = `
+    <div id="winner-msg" style="color:${color};text-shadow:0 0 20px ${color}aa">${msg}</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:4px;color:#888;margin-bottom:20px">RONDA ${round} TERMINADA</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:4px;color:#666;margin-bottom:24px">KAGE ${score[0]} — ${score[1]} BLAZE</div>
+    <button id="start-btn" onclick="nextRound()" style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:6px;color:#0a0a0f;background:#e0c050;border:none;border-radius:4px;padding:12px 40px;cursor:pointer;box-shadow:0 0 24px #e0c05066;">▶ SIGUIENTE RONDA</button>
+  `;
+  overlay.style.display = 'flex';
+}
+
+function nextRound() {
+  round++;
+  document.getElementById('round-label').textContent = `ROUND ${round}`;
+  document.getElementById('overlay').style.display = 'none';
+  initFighters(); roundTimer = 99;
+  startRound();
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, W, H);
+  drawBackground();
+  handleInput();
+  p1.applyGravity(); p1.move(); p1.update();
+  p2.applyGravity(); p2.move(); p2.update();
+  updateProjectiles();
+  const dist = (p2.x + 22) - (p1.x + 22);
+  if (Math.abs(dist) < 44) { const push = (44 - Math.abs(dist)) / 2; p1.x -= push; p2.x += push; }
+  p1.draw(); p2.draw();
+  drawProjectiles();
+  updateUI();
+  if (p1.hp <= 0 || p2.hp <= 0 || roundTimer <= 0) {
+    if (p1.hp > p2.hp) endRound(p1);
+    else if (p2.hp > p1.hp) endRound(p2);
+    else endRound('draw');
+    return;
+  }
+  if (gameRunning) animFrameId = requestAnimationFrame(gameLoop);
+}
+
+function startRound() {
+  gameRunning = true;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => { if (gameRunning) { roundTimer--; if (roundTimer < 0) roundTimer = 0; } }, 1000);
+  gameLoop();
+}
+
+function startGame() {
+  round = 1; score = [0, 0];
+  document.getElementById('round-label').textContent = 'ROUND 1';
+  document.getElementById('overlay').style.display = 'none';
+  initFighters(); roundTimer = 99;
+  startRound();
+}
+</script>
+</body>
+</html>
