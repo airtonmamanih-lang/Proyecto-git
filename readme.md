@@ -1,4 +1,7 @@
-paginas oso/
+## 📁 Estructura del proyecto
+
+```text
+pagina oso/
 │
 ├── style-global.css       ← compartido
 │
