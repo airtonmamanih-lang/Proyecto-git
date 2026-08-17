@@ -1,0 +1,116 @@
+/* =========================================
+   PERFIL
+   ========================================= */
+
+.perfil {
+
+    max-width: 1000px;
+
+    margin: auto;
+
+    padding: 40px 30px 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 60px;
+}
+
+
+.perfil-imagen img {
+
+    width: 280px;
+
+    height: 280px;
+
+    object-fit: cover;
+
+    border-radius: 15px;
+}
+
+
+.perfil-info {
+
+    flex: 1;
+}
+
+
+.perfil-info h2 {
+
+    font-size: 32px;
+
+    margin-bottom: 20px;
+}
+
+
+.perfil-info p {
+
+    margin-bottom: 20px;
+
+    color: #555;
+}
+
+
+.oculto {
+
+    display: none;
+}
+
+
+/* DATOS */
+
+.datos {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 30px;
+
+    padding: 40px;
+}
+
+
+.datos div {
+
+    background-color: white;
+
+    padding: 30px;
+
+    width: 220px;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+
+.datos h3 {
+
+    margin-bottom: 10px;
+
+    color: #2563eb;
+}
+
+
+@media (max-width: 700px) {
+
+    .perfil {
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+
+    .datos {
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+}

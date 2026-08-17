@@ -1,0 +1,145 @@
+/* =========================================
+   INICIO
+   ========================================= */
+
+.hero {
+
+    min-height: 600px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 80px;
+
+    padding: 60px 10%;
+
+    background-color: white;
+}
+
+
+.hero-content {
+
+    max-width: 550px;
+}
+
+
+.saludo {
+
+    color: #2563eb;
+
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+
+.hero h1 {
+
+    font-size: 65px;
+
+    margin: 5px 0;
+}
+
+
+.hero h2 {
+
+    color: #555;
+
+    margin-bottom: 20px;
+}
+
+
+.descripcion {
+
+    font-size: 19px;
+
+    margin-bottom: 30px;
+}
+
+
+.botones {
+
+    display: flex;
+
+    gap: 15px;
+}
+
+
+.btn-secundario {
+
+    background-color: #111827;
+}
+
+
+.btn-secundario:hover {
+
+    background-color: #374151;
+}
+
+
+/* FOTO */
+
+.hero-image img {
+
+    width: 280px;
+
+    height: 280px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 8px solid #2563eb;
+}
+
+
+/* BIENVENIDA */
+
+.bienvenida {
+
+    text-align: center;
+
+    padding: 70px 20px;
+}
+
+
+.bienvenida h2 {
+
+    font-size: 35px;
+
+    margin-bottom: 15px;
+}
+
+
+.bienvenida p {
+
+    font-size: 18px;
+
+    color: #555;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+    .hero {
+
+        flex-direction: column-reverse;
+
+        text-align: center;
+
+        gap: 30px;
+    }
+
+    .botones {
+
+        justify-content: center;
+
+        flex-wrap: wrap;
+    }
+
+}
