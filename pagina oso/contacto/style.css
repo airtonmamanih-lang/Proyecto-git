@@ -1,0 +1,235 @@
+* {
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f1f5f9;
+
+    color: #222;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+
+    background-color: #0f172a;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px 50px;
+}
+
+
+.logo {
+
+    color: white;
+
+    font-size: 28px;
+}
+
+
+.nav-links {
+
+    display: flex;
+
+    list-style: none;
+
+    gap: 30px;
+}
+
+
+.nav-links a {
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 18px;
+}
+
+
+.nav-links a:hover,
+.nav-links .active {
+
+    color: #22c55e;
+}
+
+
+/* TITULO */
+
+.titulo {
+
+    text-align: center;
+
+    padding: 60px 20px 30px;
+}
+
+
+.titulo h2 {
+
+    font-size: 42px;
+
+    margin-bottom: 15px;
+}
+
+
+.titulo p {
+
+    font-size: 19px;
+}
+
+
+/* CONTACTO */
+
+.contacto {
+
+    display: flex;
+
+    justify-content: center;
+
+    padding: 30px 20px 70px;
+}
+
+
+form {
+
+    background-color: white;
+
+    width: 500px;
+
+    padding: 35px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+form label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    margin-top: 15px;
+
+    font-weight: bold;
+}
+
+
+form input,
+form textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+
+    font-size: 16px;
+}
+
+
+form textarea {
+
+    resize: vertical;
+}
+
+
+form button {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 13px;
+
+    background-color: #0f172a;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 5px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+
+form button:hover {
+
+    background-color: #22c55e;
+}
+
+
+/* RESULTADO */
+
+#resultado {
+
+    position: absolute;
+
+    margin-top: 450px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* FOOTER */
+
+footer {
+
+    background-color: #0f172a;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 20px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .navbar {
+
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+
+    .nav-links {
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+
+    form {
+
+        width: 100%;
+    }
+
+}
