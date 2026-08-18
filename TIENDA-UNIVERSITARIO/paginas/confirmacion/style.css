@@ -1,0 +1,79 @@
+.confirmation {
+
+    min-height: 100vh;
+
+    display: grid;
+
+    place-items: center;
+
+    padding: 30px;
+
+    background: var(--cream-100);
+}
+
+
+.confirmation-card {
+
+    width: min(100%, 600px);
+
+    padding: 60px 40px;
+
+    border-radius: var(--radius-lg);
+
+    background: white;
+
+    box-shadow: var(--shadow-lg);
+
+    text-align: center;
+}
+
+
+.confirmation-icon {
+
+    width: 80px;
+    height: 80px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin: 0 auto 25px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    color: white;
+
+    font-size: 2rem;
+}
+
+
+.confirmation-card h1 {
+
+    margin: 10px 0;
+
+    font-family: 'Oswald', sans-serif;
+
+    font-size: 3rem;
+
+    text-transform: uppercase;
+}
+
+
+.confirmation-card p {
+
+    color: var(--gray-600);
+
+    margin-bottom: 15px;
+}
+
+
+.order-number {
+
+    display: block;
+
+    margin-bottom: 30px;
+
+    font-weight: 700;
+}

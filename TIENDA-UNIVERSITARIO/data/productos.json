@@ -1,0 +1,490 @@
+[
+    {
+        "id": 1,
+        "nombre": "Camiseta Oficial Local 2026",
+        "slug": "camiseta-oficial-local-2026",
+        "categoria": "camisetas",
+        "subcategoria": "oficial",
+        "precio": 249.90,
+        "precioAnterior": 279.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/camisetas/camiseta-local.jpg",
+        "imagenes": [
+            "../../assets/img/productos/camisetas/camiseta-local.jpg"
+        ],
+        "descripcion": "Camiseta oficial local de Universitario de Deportes.",
+        "descripcionCorta": "La camiseta que representa al campeón.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 25,
+        "destacado": true,
+        "nuevo": true,
+        "oferta": true,
+        "rating": 5,
+        "resenas": 124
+    },
+    {
+        "id": 2,
+        "nombre": "Camiseta Oficial Visitante 2026",
+        "slug": "camiseta-oficial-visitante-2026",
+        "categoria": "camisetas",
+        "subcategoria": "oficial",
+        "precio": 249.90,
+        "precioAnterior": 279.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/camisetas/camiseta-visita.jpg",
+        "imagenes": [
+            "../../assets/img/productos/camisetas/camiseta-visita.jpg"
+        ],
+        "descripcion": "Camiseta oficial visitante de Universitario de Deportes.",
+        "descripcionCorta": "Diseño oficial para acompañar al equipo.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema",
+            "Rojo"
+        ],
+        "stock": 18,
+        "destacado": true,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 5,
+        "resenas": 89
+    },
+    {
+        "id": 3,
+        "nombre": "Camiseta Alternativa",
+        "slug": "camiseta-alternativa",
+        "categoria": "camisetas",
+        "subcategoria": "oficial",
+        "precio": 229.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/camisetas/camiseta-alternativa.jpg",
+        "imagenes": [
+            "../../assets/img/productos/camisetas/camiseta-alternativa.jpg"
+        ],
+        "descripcion": "Camiseta alternativa con diseño exclusivo.",
+        "descripcionCorta": "Una edición diferente para el hincha.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Rojo"
+        ],
+        "stock": 15,
+        "destacado": false,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 4.8,
+        "resenas": 52
+    },
+    {
+        "id": 4,
+        "nombre": "Camiseta Retro Universitario",
+        "slug": "camiseta-retro-universitario",
+        "categoria": "camisetas",
+        "subcategoria": "retro",
+        "precio": 199.90,
+        "precioAnterior": 229.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/camisetas/camiseta-retro.jpg",
+        "imagenes": [
+            "../../assets/img/productos/camisetas/camiseta-retro.jpg"
+        ],
+        "descripcion": "Camiseta inspirada en la historia del club.",
+        "descripcionCorta": "Historia, tradición y pasión crema.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 10,
+        "destacado": true,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 4.9,
+        "resenas": 71
+    },
+
+    {
+        "id": 5,
+        "nombre": "Polo de Entrenamiento",
+        "slug": "polo-entrenamiento",
+        "categoria": "entrenamiento",
+        "subcategoria": "polos",
+        "precio": 119.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/entrenamiento/polo-entrenamiento.jpg",
+        "imagenes": [
+            "../../assets/img/productos/entrenamiento/polo-entrenamiento.jpg"
+        ],
+        "descripcion": "Polo deportivo inspirado en la indumentaria de entrenamiento.",
+        "descripcionCorta": "Comodidad para entrenar como un profesional.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema",
+            "Rojo"
+        ],
+        "stock": 30,
+        "destacado": true,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 4.8,
+        "resenas": 36
+    },
+    {
+        "id": 6,
+        "nombre": "Short Deportivo",
+        "slug": "short-deportivo",
+        "categoria": "entrenamiento",
+        "subcategoria": "shorts",
+        "precio": 89.90,
+        "precioAnterior": 99.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/entrenamiento/short-entrenamiento.jpg",
+        "imagenes": [
+            "../../assets/img/productos/entrenamiento/short-entrenamiento.jpg"
+        ],
+        "descripcion": "Short deportivo para entrenamiento.",
+        "descripcionCorta": "Ligero, cómodo y deportivo.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 22,
+        "destacado": false,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 4.7,
+        "resenas": 28
+    },
+    {
+        "id": 7,
+        "nombre": "Buzo Deportivo",
+        "slug": "buzo-deportivo",
+        "categoria": "entrenamiento",
+        "subcategoria": "buzos",
+        "precio": 169.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/entrenamiento/buzo-deportivo.jpg",
+        "imagenes": [
+            "../../assets/img/productos/entrenamiento/buzo-deportivo.jpg"
+        ],
+        "descripcion": "Buzo deportivo inspirado en el estilo del club.",
+        "descripcionCorta": "Perfecto para entrenamientos y días fríos.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 14,
+        "destacado": false,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 4.9,
+        "resenas": 17
+    },
+    {
+        "id": 8,
+        "nombre": "Casaca de Entrenamiento",
+        "slug": "casaca-entrenamiento",
+        "categoria": "entrenamiento",
+        "subcategoria": "casacas",
+        "precio": 189.90,
+        "precioAnterior": 209.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/entrenamiento/casaca-entrenamiento.jpg",
+        "imagenes": [
+            "../../assets/img/productos/entrenamiento/casaca-entrenamiento.jpg"
+        ],
+        "descripcion": "Casaca deportiva para entrenamiento.",
+        "descripcionCorta": "Protección y estilo para acompañar al equipo.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema",
+            "Rojo"
+        ],
+        "stock": 12,
+        "destacado": true,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 4.8,
+        "resenas": 41
+    },
+
+    {
+        "id": 9,
+        "nombre": "Gorro Universitario",
+        "slug": "gorro-universitario",
+        "categoria": "accesorios",
+        "subcategoria": "gorras",
+        "precio": 59.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/accesorios/gorro.jpg",
+        "imagenes": [
+            "../../assets/img/productos/accesorios/gorro.jpg"
+        ],
+        "descripcion": "Gorro con identidad crema.",
+        "descripcionCorta": "Lleva los colores del club a donde vayas.",
+        "tallas": [
+            "Única"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 40,
+        "destacado": false,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 4.7,
+        "resenas": 22
+    },
+    {
+        "id": 10,
+        "nombre": "Bufanda Universitario",
+        "slug": "bufanda-universitario",
+        "categoria": "accesorios",
+        "subcategoria": "bufandas",
+        "precio": 69.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/accesorios/bufanda.jpg",
+        "imagenes": [
+            "../../assets/img/productos/accesorios/bufanda.jpg"
+        ],
+        "descripcion": "Bufanda con los colores representativos del club.",
+        "descripcionCorta": "Ideal para acompañar al equipo en cada partido.",
+        "tallas": [
+            "Única"
+        ],
+        "colores": [
+            "Crema",
+            "Rojo"
+        ],
+        "stock": 25,
+        "destacado": true,
+        "nuevo": false,
+        "oferta": false,
+        "rating": 4.9,
+        "resenas": 63
+    },
+    {
+        "id": 11,
+        "nombre": "Mochila Universitario",
+        "slug": "mochila-universitario",
+        "categoria": "accesorios",
+        "subcategoria": "mochilas",
+        "precio": 109.90,
+        "precioAnterior": 129.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/accesorios/mochila.jpg",
+        "imagenes": [
+            "../../assets/img/productos/accesorios/mochila.jpg"
+        ],
+        "descripcion": "Mochila deportiva con identidad del club.",
+        "descripcionCorta": "Diseñada para llevar tus cosas todos los días.",
+        "tallas": [
+            "Única"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 20,
+        "destacado": false,
+        "nuevo": true,
+        "oferta": true,
+        "rating": 4.8,
+        "resenas": 34
+    },
+    {
+        "id": 12,
+        "nombre": "Llavero Universitario",
+        "slug": "llavero-universitario",
+        "categoria": "accesorios",
+        "subcategoria": "llaveros",
+        "precio": 24.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/accesorios/llavero.jpg",
+        "imagenes": [
+            "../../assets/img/productos/accesorios/llavero.jpg"
+        ],
+        "descripcion": "Llavero coleccionable con identidad crema.",
+        "descripcionCorta": "Un pequeño detalle para un gran hincha.",
+        "tallas": [
+            "Única"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 50,
+        "destacado": false,
+        "nuevo": false,
+        "oferta": false,
+        "rating": 4.6,
+        "resenas": 19
+    },
+    {
+        "id": 13,
+        "nombre": "Pelota Oficial",
+        "slug": "pelota-oficial",
+        "categoria": "accesorios",
+        "subcategoria": "pelotas",
+        "precio": 99.90,
+        "precioAnterior": 119.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/accesorios/pelota.jpg",
+        "imagenes": [
+            "../../assets/img/productos/accesorios/pelota.jpg"
+        ],
+        "descripcion": "Pelota deportiva para entrenamiento y colección.",
+        "descripcionCorta": "La pasión también se juega.",
+        "tallas": [
+            "Única"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 16,
+        "destacado": true,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 4.8,
+        "resenas": 27
+    },
+
+    {
+        "id": 14,
+        "nombre": "Colección Retro",
+        "slug": "coleccion-retro",
+        "categoria": "coleccion",
+        "subcategoria": "retro",
+        "precio": 219.90,
+        "precioAnterior": 249.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/coleccion/coleccion-retro.jpg",
+        "imagenes": [
+            "../../assets/img/productos/coleccion/coleccion-retro.jpg"
+        ],
+        "descripcion": "Colección inspirada en la historia del club.",
+        "descripcionCorta": "Un homenaje a la tradición crema.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 8,
+        "destacado": true,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 5,
+        "resenas": 96
+    },
+    {
+        "id": 15,
+        "nombre": "Colección Especial",
+        "slug": "coleccion-especial",
+        "categoria": "coleccion",
+        "subcategoria": "especial",
+        "precio": 239.90,
+        "precioAnterior": null,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/coleccion/coleccion-especial.jpg",
+        "imagenes": [
+            "../../assets/img/productos/coleccion/coleccion-especial.jpg"
+        ],
+        "descripcion": "Edición especial para coleccionistas.",
+        "descripcionCorta": "Una pieza exclusiva para los verdaderos hinchas.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 6,
+        "destacado": true,
+        "nuevo": true,
+        "oferta": false,
+        "rating": 5,
+        "resenas": 48
+    },
+    {
+        "id": 16,
+        "nombre": "Colección Hincha",
+        "slug": "coleccion-hincha",
+        "categoria": "coleccion",
+        "subcategoria": "hincha",
+        "precio": 149.90,
+        "precioAnterior": 169.90,
+        "moneda": "PEN",
+        "imagen": "../../assets/img/productos/coleccion/coleccion-hincha.jpg",
+        "imagenes": [
+            "../../assets/img/productos/coleccion/coleccion-hincha.jpg"
+        ],
+        "descripcion": "Colección pensada para los hinchas del club.",
+        "descripcionCorta": "Pasión crema para todos los días.",
+        "tallas": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colores": [
+            "Crema"
+        ],
+        "stock": 13,
+        "destacado": false,
+        "nuevo": false,
+        "oferta": true,
+        "rating": 4.9,
+        "resenas": 55
+    }
+]

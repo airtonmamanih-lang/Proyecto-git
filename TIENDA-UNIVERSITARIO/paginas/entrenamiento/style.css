@@ -1,0 +1,9 @@
+.page-hero {
+
+    background:
+        linear-gradient(
+            110deg,
+            #111 0%,
+            #292929 100%
+        );
+}

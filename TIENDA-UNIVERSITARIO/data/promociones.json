@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "titulo": "Nueva camiseta 2026",
+        "subtitulo": "La crema vuelve a vestir la historia.",
+        "descripcion": "Descubre la nueva camiseta oficial.",
+        "imagen": "../assets/img/banners/banner-principal.jpg",
+        "tipo": "principal",
+        "descuento": 0,
+        "activo": true,
+        "orden": 1
+    },
+    {
+        "id": 2,
+        "titulo": "Colección oficial",
+        "subtitulo": "Tradición que nunca cambia.",
+        "descripcion": "Descubre nuestros productos oficiales.",
+        "imagen": "../assets/img/banners/banner-camisetas.jpg",
+        "tipo": "categoria",
+        "descuento": 10,
+        "activo": true,
+        "orden": 2
+    },
+    {
+        "id": 3,
+        "titulo": "Entrena con la crema",
+        "subtitulo": "Rinde al máximo dentro y fuera de la cancha.",
+        "descripcion": "Conoce nuestra línea de entrenamiento.",
+        "imagen": "../assets/img/banners/banner-entrenamiento.jpg",
+        "tipo": "categoria",
+        "descuento": 15,
+        "activo": true,
+        "orden": 3
+    },
+    {
+        "id": 4,
+        "titulo": "Ofertas para hinchas",
+        "subtitulo": "Productos seleccionados con descuentos especiales.",
+        "descripcion": "Aprovecha nuestras promociones.",
+        "imagen": "../assets/img/banners/banner-ofertas.jpg",
+        "tipo": "oferta",
+        "descuento": 20,
+        "activo": true,
+        "orden": 4
+    }
+]

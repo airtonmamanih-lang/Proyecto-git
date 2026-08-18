@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Productos | Tienda Crema</title>
+
+    <link
+        rel="stylesheet"
+        href="../style-global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <header class="header">
+
+        <div class="container navbar">
+
+            <a
+                href="../inicio/index.html"
+                class="brand"
+            >
+
+                <span class="brand-mark">U</span>
+
+                <span class="brand-text">
+                    Tienda Crema
+                </span>
+
+            </a>
+
+
+            <button
+                class="menu-toggle"
+                aria-label="Menú"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <nav>
+
+                <ul class="nav-links">
+
+                    <li>
+                        <a href="../inicio/index.html">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="index.html"
+                            class="active"
+                        >
+                            Productos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../camisetas/index.html">
+                            Camisetas
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../entrenamiento/index.html">
+                            Entrenamiento
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../accesorios/index.html">
+                            Accesorios
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../coleccion/index.html">
+                            Colección
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <div class="header-actions">
+
+                <a
+                    href="../favoritos/index.html"
+                    class="icon-button"
+                >
+                    ♡
+                </a>
+
+                <a
+                    href="../carrito/index.html"
+                    class="icon-button"
+                >
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="page-hero">
+
+            <div class="container page-hero-content">
+
+                <div class="breadcrumb">
+
+                    <a href="../inicio/index.html">
+                        Inicio
+                    </a>
+
+                    <span>/</span>
+
+                    <span>Productos</span>
+
+                </div>
+
+                <span class="eyebrow">
+                    Catálogo
+                </span>
+
+                <h1>
+                    Todos los productos
+                </h1>
+
+                <p>
+                    Encuentra prendas y accesorios
+                    para llevar tu pasión contigo.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <div class="container">
+
+
+                <div class="catalog-toolbar">
+
+                    <div>
+
+                        <strong>
+                            Catálogo
+                        </strong>
+
+                        <span id="product-count">
+                            8 productos
+                        </span>
+
+                    </div>
+
+
+                    <div class="catalog-actions">
+
+                        <input
+                            id="search-product"
+                            class="form-control"
+                            type="search"
+                            placeholder="Buscar producto..."
+                        >
+
+
+                        <select
+                            id="sort-products"
+                            class="form-control"
+                        >
+
+                            <option value="default">
+                                Ordenar
+                            </option>
+
+                            <option value="low">
+                                Precio: menor a mayor
+                            </option>
+
+                            <option value="high">
+                                Precio: mayor a menor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="product-grid"
+                    class="product-grid"
+                >
+
+                    <!-- JS cargará los productos -->
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <div class="footer-bottom">
+
+            <div class="container">
+
+                © <span data-year></span>
+                Tienda Crema.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script src="../script-global.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

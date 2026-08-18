@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "nombre": "Camisetas",
+        "slug": "camisetas",
+        "descripcion": "Camisetas oficiales y diseños especiales del club.",
+        "imagen": "../assets/img/categorias/categoria-camisetas.jpg",
+        "icono": "shirt"
+    },
+    {
+        "id": 2,
+        "nombre": "Entrenamiento",
+        "slug": "entrenamiento",
+        "descripcion": "Indumentaria deportiva para entrenar con estilo.",
+        "imagen": "../assets/img/categorias/categoria-entrenamiento.jpg",
+        "icono": "activity"
+    },
+    {
+        "id": 3,
+        "nombre": "Accesorios",
+        "slug": "accesorios",
+        "descripcion": "Accesorios para llevar siempre contigo la pasión crema.",
+        "imagen": "../assets/img/categorias/categoria-accesorios.jpg",
+        "icono": "shopping-bag"
+    },
+    {
+        "id": 4,
+        "nombre": "Colección",
+        "slug": "coleccion",
+        "descripcion": "Productos especiales para coleccionistas e hinchas.",
+        "imagen": "../assets/img/categorias/categoria-coleccion.jpg",
+        "icono": "star"
+    }
+]
