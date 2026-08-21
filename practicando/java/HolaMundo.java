@@ -5,5 +5,6 @@ public class HolaMundo {
         System.out.println("Hola mundo");
         System.out.println("Estoy programando en Java");
 
-    
+    }
+
 }
