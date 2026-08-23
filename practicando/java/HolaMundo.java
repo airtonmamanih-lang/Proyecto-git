@@ -4,6 +4,7 @@ public class HolaMundo {
 
         System.out.println("Hola mundo");
         System.out.println("Estoy programando en Java");
+        System.out.println("Estoy practicando Java");
 
     }
 
