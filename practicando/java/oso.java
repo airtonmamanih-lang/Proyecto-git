@@ -1,14 +1,19 @@
-import java.util.ArrayList;
 public class oso {
 
     public static void main(String[] args) {
-        System.out.println("Dejame bien oso");
+        
+        int numero = 10;
         String nombre = "oso";
-        System.out.println("El oso se llama: " + nombre);
-        ArrayList<String> lista = new ArrayList<>();
-        lista.add("oso");
-        System.out.println("Lista de osos: " + lista);
-
+        double decimal = 3.14;
+        boolean antioso = true;
+        char letra = 'a';
+        
+        System.out.println("Dejame bien oso");
+        System.out.println(numero * 2);
+        System.out.println(nombre);
+        System.out.println(decimal +numero);
+        System.out.println(antioso);
+        System.out.println(letra +  "=".repeat(20));
     }
 
 }
