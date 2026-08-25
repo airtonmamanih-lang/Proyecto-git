@@ -13,7 +13,7 @@ public class Calculadora {
         System.out.print("Ingrese el primer numero: ");
         n1 = sc.nextDouble();
 
-        System.out.print("Ingrese el segundo numero: ");
+        System.out.print("Ingrese el 12segundo numero: ");
         n2 = sc.nextDouble();
 
         System.out.println("Ingrese la operación:");
