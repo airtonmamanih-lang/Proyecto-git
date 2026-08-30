@@ -7,7 +7,7 @@ public class Calculadora {
         Scanner sc = new Scanner(System.in);
 
         double n1;
-        double n2;
+        double n2
         double resultado;
 
         System.out.print("Ingrese el primer numero: ");
